@@ -1,0 +1,10 @@
+@charset "utf-8";
+
+/* ================================
+	BASE
+================================ */
+.hero__bg__img {
+    background-image: url(/images/work/single/4/portfolio-single-4.jpg);
+    background-position: 50% 35% !important;
+    transform: translateY(0px) translateZ(0px);
+}

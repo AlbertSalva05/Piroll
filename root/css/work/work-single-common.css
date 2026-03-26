@@ -1,0 +1,375 @@
+@charset "utf-8";
+
+/* ================================
+	BASE
+================================ */
+::selection {
+    background-color: #10c9c3;
+    color: #fff;
+}
+
+.project {
+	padding: 0;
+	background: #f5f5f5;
+}
+
+/* IMPORTANT: allow sticky to work */
+.wrap,
+.no_wrap,
+.project,
+.project__row {
+	overflow: visible !important;
+}
+
+body {
+    font-family: "Nunito Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.footer p,
+.footer a {
+	color: #252525;
+	font-size: 15px;
+}
+
+.footer {
+	background-color: var(--bg-gray-4);
+}
+
+/* ================================
+	LAYOUT
+================================ */
+.project__container {
+	display: flex;
+	margin: 0 auto;
+	align-items: flex-start;
+	gap: 60px;
+}
+
+/* Columns */
+.project__column {
+	width: 50%;
+}
+
+/* ================================
+	IMAGE COLUMN
+================================ */
+.project__media {
+	min-width: 300px;
+}
+
+.project__media-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.project__media img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: 4px;
+	object-fit: cover;
+
+	aspect-ratio: 4 / 3;
+}
+
+/* ================================
+	CONTENT (STICKY)
+================================ */
+.project__content {
+	position: sticky;
+	top: 100px;
+	max-width: 580px;
+	height: fit-content;
+	padding: 92px 60px 92px 90px;
+	color: #333;
+}
+
+/* ================================
+	TYPOGRAPHY
+================================ */
+.project__title {
+	margin-bottom: 20px;
+	font-size: 38px;
+	font-weight: 600;
+	font-family: Montserrat, sans-serif;
+	letter-spacing: .012em;
+}
+
+.project__desc {
+	margin-bottom: 16px;
+	color: #666;
+	font-size: 15px;
+	line-height: 1.65;
+}
+
+/* ================================
+	META (Definition List - FIXED)
+================================ */
+.project__meta {
+	margin-top: 46px;
+}
+.project__intro-meta .project__meta {
+	margin-top: 6px;
+}
+.project__meta-row {
+	display: grid;
+	margin-bottom: 10px;
+	grid-template-columns: 60px 1fr;
+	align-items: center;
+}
+
+.project__meta dt {
+	margin: 0;
+	color: #171717;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.project__meta dt::after {
+	margin-left: 4px;
+	content: ":";
+}
+
+.project__meta dd {
+	margin: 0;
+	color: #333;
+	font-size: 14px;
+}
+
+/* ================================
+	RESPONSIVE
+================================ */
+@media (max-width: 992px) {
+	.project__container {
+		gap: 40px;
+	}
+}
+
+@media (max-width: 768px) {
+	.project__container {
+		flex-direction: column;
+	}
+
+	.project__column {
+		width: 100%;
+	}
+
+	/* Disable sticky on mobile */
+	.project__content {
+		position: static;
+		top: auto;
+		max-width: 100%;
+		padding: 40px 20px;
+	}
+}
+
+header.scrolled.disabled-fixed-header {
+	position: relative !important;
+}
+
+
+/* ================================
+	NAV CONTAINER
+================================ */
+.project__nav {
+	padding: 20px 0;
+}
+.project__nav-list {
+	display: flex;
+
+	padding: 24px 40px;
+	align-items: center;
+	justify-content: space-between;
+}
+
+/* ================================
+	ITEMS
+================================ */
+.project__nav-list-item {
+	display: flex;
+	color: #333;
+	font-size: 12px;
+	text-decoration: none;
+	letter-spacing: 1.5px;
+	align-items: center;
+	gap: 8px;
+	text-transform: uppercase;
+	transition: opacity 0.2s ease;
+}
+
+.project__nav-list-item:hover {
+	opacity: 0.6;
+}
+
+/* ================================
+	ALIGNMENT
+================================ */
+.project__nav-list-prev {
+	justify-content: flex-start;
+}
+
+.project__nav-list-grid {
+	justify-content: center;
+}
+
+.project__nav-list-next {
+	justify-content: flex-end;
+}
+
+/* ================================
+	GRID ICON (4 squares)
+================================ */
+.project__nav-list-grid-icon {
+	display: grid;
+	grid-template-columns: repeat(2, 6px);
+	gap: 4px;
+}
+
+.project__nav-list-grid-icon span {
+	display: block;
+	width: 6px;
+	height: 6px;
+	background: #171717;
+    opacity: 0.6;
+}
+
+/* ================================
+	ARROWS
+================================ */
+.project__nav-list-arrow {
+	font-size: 28px;
+	line-height: 0.6;
+}
+
+/* ================================
+	RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+	.project__nav-list {
+		padding: 20px;
+	}
+
+	.project__nav-list-text {
+		display: none;
+	}
+}
+.project__nav-list.is-first .project__nav-list-prev {
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* ================================
+	VARIANT: ALT LAYOUT
+================================ */
+.project--alt {
+	background: #f5f5f5;
+}
+
+/* HERO */
+.project__hero img {
+	display: block;
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	aspect-ratio: 16 / 6;
+}
+
+/* TEXT */
+.project__hero-text {
+	margin-top: 80px;
+}
+
+/* ================================
+	INTRO (2 COLUMN TEXT)
+================================ */
+.project__intro {
+	display: flex;
+	padding: 0 0 80px;
+	gap: 80px;
+}
+
+/* LEFT TEXT */
+.project__intro-main {
+	max-width: 700px;
+	flex: 2;
+}
+
+/* RIGHT META */
+.project__intro-meta {
+	min-width: 260px;
+	flex: 1;
+}
+
+/* ================================
+	GALLERY (BOTTOM IMAGES)
+================================ */
+.project__gallery {
+	padding-bottom: 80px;
+}
+
+.project__gallery-list {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 30px;
+}
+
+/* First item: full width */
+.project__gallery-list li:first-child {
+	grid-column: 1 / -1;
+}
+
+.project__gallery-list img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	aspect-ratio: 4 / 3;
+}
+
+/* ================================
+	RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+	.project__gallery-list {
+		grid-template-columns: 1fr;
+	}
+
+	/* Reset full-width behavior on mobile */
+	.project__gallery-list li:first-child {
+		grid-column: auto;
+	}
+}
+
+/* ================================
+	RESPONSIVE
+================================ */
+@media (max-width: 992px) {
+	.project__intro {
+		gap: 40px;
+	}
+}
+
+@media (max-width: 768px) {
+	.project__intro {
+		flex-direction: column;
+	}
+
+	.project__gallery {
+		grid-template-columns: 1fr;
+	}
+}
+
+
+header.scrolled.relative {
+    position: relative !important;
+}
+
+.hero__area.centered {
+    padding-top: 0;
+}
+.hero__area.centered .hero__txt {
+    padding: 83px 0;
+}

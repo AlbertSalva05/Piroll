@@ -1,0 +1,14 @@
+[
+  { "category": "photography", "image": "/images/work/img_portfolio_011.jpg" },
+  { "category": "design", "image": "/images/work/img_portfolio_004.jpg" },
+  { "category": "branding", "image": "/images/work/img_portfolio_007.jpg" },
+  { "category": "print", "image": "/images/work/img_portfolio_002.jpg" },
+  { "category": "branding", "image": "/images/work/img_portfolio_001.jpg" },
+  { "category": "design", "image": "/images/work/img_portfolio_003.jpg" },
+  { "category": "design", "image": "/images/work/img_portfolio_005.jpg" },
+  { "category": "branding", "image": "/images/work/img_portfolio_008.jpg" },
+  { "category": "branding", "image": "/images/work/img_portfolio_006.jpg" },
+  { "category": "photography", "image": "/images/work/img_portfolio_012.jpg" },
+  { "category": "print", "image": "/images/work/img_portfolio_010.jpg" },
+  { "category": "photography", "image": "/images/work/img_portfolio_009.jpg" }
+]

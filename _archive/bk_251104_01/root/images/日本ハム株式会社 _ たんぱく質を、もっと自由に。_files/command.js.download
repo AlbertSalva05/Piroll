@@ -1,0 +1,169 @@
+// *******************************
+// player command
+// *******************************
+window.addEventListener(
+  'message',
+  function(ev) {
+    /**
+     * tureか判定
+     * @param _val mix
+     * @returns bool
+     */
+    var isTrue = function(_val) {
+      if (
+        (typeof _val === 'boolean' && _val === true) ||
+        (typeof _val === 'string' && _val.toLowerCase() === 'true')
+      ) {
+        return true;
+      }
+      return false;
+    };
+
+    /**
+     * falseか判定
+     * @param _val mix
+     * @returns bool
+     */
+    var isFalse = function(_val) {
+      if (
+        (typeof _val === 'boolean' && _val === false) ||
+        (typeof _val === 'string' && _val.toLowerCase() === 'false')
+      ) {
+        return true;
+      }
+      return false;
+    };
+
+    /**
+     * プレイヤーコマンド用のデータ解析、取得
+     * @param ev Object | string
+     * @returns Object | false
+     */
+    var parsePlayerCommandData = function(raw_data) {
+      // 通常ブラウザ
+      if (typeof raw_data == 'object') {
+        // 生で扱える形式（のはず）
+        if (
+          typeof raw_data.signature == 'string' &&
+          raw_data.signature == 'videog_player_command' &&
+          typeof raw_data.name == 'string'
+        ) {
+          return raw_data;
+        } else {
+          // ビデオグプレーヤーイベント以外は処理しない
+          return false;
+        }
+      }
+
+      // クエリーストリング形式（IE9以下互換）
+      if (typeof raw_data != 'string') {
+        // 非サポート形式
+        return false;
+      }
+      if (raw_data.indexOf('videog_player_command') < 0) {
+        // ビデオグプレーヤーイベント以外は処理しない
+        return false;
+      }
+      // 通知データの "signature=videog_player_event&name=timeupdate&value=..." という文字列を分解して配列化
+      var ev_strings = raw_data.split('&');
+      // オブジェクトに変換する
+      var ev_data = {};
+      for (var i = 0; i < ev_strings.length; i++) {
+        var parts = ev_strings[i].split('=', 2);
+        var label = decodeURIComponent(parts[0]);
+        var data = decodeURIComponent(parts[1]);
+        ev_data[label] = data;
+      }
+      if (typeof ev_data.name != 'string') {
+        // nameは必須
+        return false;
+      }
+      return ev_data;
+    };
+
+    /**
+     * プレイヤーコマンドを実行する
+     * @param player
+     * @param ev_data object
+     * @returns void
+     */
+    var execPlayerCommand = function(player, ev_data) {
+      // 引数無しで実行
+      if (
+        ev_data.name == 'play' ||
+        ev_data.name == 'pause' ||
+        ev_data.name == 'stop'
+      ) {
+        player[ev_data.name]();
+        return;
+      }
+      // 引数有りで実行だが、特別に対応するもの
+      if (ev_data.name == 'setMute' || ev_data.name == 'setFullscreen' || ev_data.name == 'setCaption') {
+        // trueの場合
+        if (isTrue(ev_data.value)) {
+          player[ev_data.name](true);
+          return;
+        }
+        // falseの場合
+        if (isFalse(ev_data.value)) {
+          player[ev_data.name](false);
+          return;
+        }
+        // トグル動作
+        player[ev_data.name]();
+        return;
+      }
+
+      // 引数有りで実行
+      if (
+        ev_data.name == 'seek' ||
+        ev_data.name == 'setVolume' ||
+        ev_data.name == 'playlistItem' ||
+        ev_data.name == 'load' ||
+        ev_data.name == 'setCurrentCaptions'
+      ) {
+        if (typeof ev_data.value == 'undefined') {
+          return;
+        }
+        player[ev_data.name](ev_data.value);
+        return;
+      }
+
+      // if(ev_data.name == "resize"){
+      //   // NOTE: 現状ではSteedSemiでIEのバグ対応のhack用（非公開内部仕様）
+      //   // NOTE: 公開機能とする場合にはvalue2の導入を検討すべきか
+      //   if(typeof(ev_data.value) !== "string"){
+      //     return;
+      //   }
+      //   var parts = ev_data.value.split(",", 2);
+      //   if(parts.length == 2){
+      //     player[ev_data.name](parts[0], parts[1]);
+      //   }
+      //   return;
+      // }
+
+      // if(ev_data.name == "setCurrentQuality"){
+      //   var val = parseInt(ev_data.value, 10);
+      //   var levels = player.getQualityLevels();
+      //   if(typeof(val) === "number" && !isNaN(val)){
+      //     if(val >= 0 && val < levels.length){
+      //       player[ev_data.name](val);
+      //     }
+      //   }
+      //   // Do we have to support 'label' based selection?
+      //   // else if(typeof(val) === "string")
+      //   return;
+      // }
+    };
+
+    // プレイヤーコマンド用のデータ解析、取得
+    var ev_data = parsePlayerCommandData(ev.data);
+    // データが不正な場合は終了
+    if (ev_data === false) {
+      return;
+    }
+    // コマンド実行
+    execPlayerCommand(VideogPlayerApp.player, ev_data);
+  },
+  false
+);

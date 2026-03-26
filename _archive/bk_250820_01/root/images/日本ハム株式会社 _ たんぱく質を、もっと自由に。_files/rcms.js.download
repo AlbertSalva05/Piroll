@@ -1,0 +1,80 @@
+(function($) {
+  /**
+   * トピックスリストを取ってきて整形するクラス
+   */
+  var TopicsFetcher = function(setting) {
+      this.topicsGroupId = setting.topicsGroupId || '';
+      this.cnt = setting.cnt || 10; // 取得する記事数
+      this.dataType = setting.dataType || 'json'; // デフォルトを 'json' に
+      this.from_page = setting.from_page || "";;
+      this.puts = setting.puts || function() {};
+  };
+
+  // 記事詳細のURL生成
+//   TopicsFetcher.getTopicsDetailUrl = function(topic) {
+//       if (topic.link_flg == '1') {
+//           if (topic.ext_col_99) {
+//               return topic.ext_col_99;
+//           } else {
+//               return '/topics_detail' + topic.topics_group_id + '/id=' + topic.topics_id;
+//           }
+//       } else if (topic.link_flg == '2') {
+//           return topic.link_url;
+//       } else {
+//           return "";
+//       }
+//   };
+
+  TopicsFetcher.formatYmd = function(ymd) {
+      if (!ymd || ymd.indexOf('-') === -1) return ''; // 不正な値チェック
+      var splitted = ymd.split('-');
+      return splitted[0] + '年' + splitted[1] + '月' + splitted[2] + '日';
+  };
+
+  TopicsFetcher.prototype = {
+      constructor: TopicsFetcher,
+
+      _makeOptions: function() {
+          var self = this;
+          return {
+              type: 'GET',
+              url: '//' + window.location.host + '/topics_list' + self.topicsGroupId + '/',
+              dataType: self.dataType, // dataTypeをリクエストに反映
+              data: {
+                  data_format: "json",
+                  cnt: self.cnt,
+                  dataType: self.dataType,
+                  from_page: self.from_page
+              },
+              success: function(data) {
+
+                  if (!data) {
+                      console.error("取得データが null または undefined:", data);
+                      return;
+                  }
+
+                  // dataType が 'html' の場合は data をそのまま渡す
+                  if (self.dataType === 'html') {
+                      self.puts(data);
+                  } else {
+                      // JSONデータとして処理
+                      if (!data.html_source && (!data.topicsList || data.topicsList.length === 0)) {
+                          console.error("取得データが不正: html_source も topicsList も空", data);
+                          return;
+                      }
+                      self.puts(data.pageInfo, data.topicsList, data.html_source);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  console.error("AJAXエラー:", status, error);
+              }
+          };
+      },
+
+      run: function() {
+          $.ajax(this._makeOptions());
+      }
+  };
+
+  window.TopicsFetcher = TopicsFetcher;
+})(jQuery);

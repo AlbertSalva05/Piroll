@@ -1,0 +1,52 @@
+@charset "utf-8";
+
+
+/* hero__area */
+.hero__bg__img {
+	background-image: url("/images/about/page-services/header-services.jpg");
+	background-position: 50% 35% !important;
+	transform: translateY(0px) translateZ(0px);
+}
+
+.slider__testimony_area p {
+    font-family: var(--font-fa-primary);
+}
+.slider__testimony_area p.content__quote {
+    font-size: 1.6rem;
+}
+.slider__testimony_area p.content__author {
+    font-size: 1.2rem;
+}
+
+@media print, screen and (min-width: 768px) {
+	.testimonials {
+		padding: 130px 0;
+	}
+}
+
+
+
+/* TABLET STYLES */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+
+}
+
+/* DESKTOP STYLES */
+@media print, screen and (min-width: 1024px) {
+
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1399px) {
+
+}
+
+/* PC STYLES */
+@media only screen and (min-width: 1400px) and (max-width: 1600px) {
+
+}
+
+
+/* SP STYLES */
+@media screen and (max-width: 767px) {
+
+}

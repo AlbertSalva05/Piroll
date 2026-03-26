@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two-Column Responsive Layout</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .column {
+      flex: 1;
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .left-column {
+      background-color: #ffffff; /* White background */
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .left-column h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .skill {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+
+    .skill-name {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .skill-name span {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .skill-bar {
+      height: 8px;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .skill-bar div {
+      height: 100%;
+      border-radius: 4px;
+      background-color: #00c8c8;
+    }
+
+    .skill-bar .uiux { width: 75%; }
+    .skill-bar .webdev { width: 90%; }
+    .skill-bar .marketing { width: 65%; }
+
+    .right-column {
+      background-color: #f0f0f0; /* Light gray background */
+    }
+
+    .right-column img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .column {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Column -->
+    <div class="column left-column">
+      <div>
+        <h2>Professional Skills</h2>
+        <div class="skill">
+          <div class="skill-name">
+            <span>UI/UX Design</span>
+            <span>75%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="uiux"></div>
+          </div>
+        </div>
+        <div class="skill">
+          <div class="skill-name">
+            <span>Web Development</span>
+            <span>90%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="webdev"></div>
+          </div>
+        </div>
+        <div class="skill">
+          <div class="skill-name">
+            <span>Marketing</span>
+            <span>65%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="marketing"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="column right-column">
+      <img src="/images/mv_img_banner.webp" alt="Block Image">
+    </div>
+  </div>
+</body>
+</html>

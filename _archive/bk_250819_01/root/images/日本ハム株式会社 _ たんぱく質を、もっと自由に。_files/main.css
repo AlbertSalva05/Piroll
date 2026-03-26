@@ -1,0 +1,546 @@
+body{
+	margin:0px;
+}
+.body1{ 
+	font-size:13px;
+	background-image:url(/r/tpl/0/p/img/header_back3.png);
+	background-repeat:repeat-x;
+	background-position:top center;
+}
+
+a{text-decoration: none;}
+
+.body2{ 
+	font-size:13px;
+	background-image:url(/r/tpl/0/p/img/header_back.png);
+	background-repeat:repeat-x;
+	background-position:top center;
+}
+
+.body3{ 
+	font-size:13px;
+	background-image:url(/r/tpl/0/p/img/header_back2.png);
+	background-repeat:repeat-x;
+}
+
+/*個人用ページトップ*/
+.body_personal{ 
+	font-size:13px;
+	/*background-image:url(/r/tpl/0/p/img/header_back4.png);
+	background-repeat:repeat-x;*/
+}
+
+td,th{ font-size:15px;line-height:1.5; }
+
+
+.menu{
+	background-image:url("/r/tpl/0/p/img/menu_back_long.png");
+	background-repeat:no-repeat;
+	width:970px;
+	height:46px;
+
+}
+
+.menu2{
+	background-image:url("/r/tpl/0/p/img/login_menu4.png");
+	background-repeat:no-repeat;
+	width:790px;
+	height:46px;
+
+}
+
+.menu td{
+
+	font-size:12px;
+	width:137px;
+	text-align:center;
+	height:46px;
+}
+
+.menu2 td{
+
+	font-size:12px;
+	width:137px;
+	text-align:center;
+	height:46px;
+	text-indent:10px;
+}
+
+.menu a{color:#333399;text-decoration: none;}
+.menu2 a{color:#333399;text-decoration: none;}
+
+.title1 {
+	background-image:url("/r/tpl/0/p/img/banner_back.png");
+	background-repeat:no-repeat;
+	padding-top:6px;
+	font-weight:bold;
+	text-indent:20px;
+	height:50px;
+	line-height:40px;
+}
+
+table.table1{
+	font-size:12px;
+    border: 1px #ccc solid;
+    border-spacing: 0;
+    background: #fff;
+}
+
+table.table1 th {
+    padding:7px 5px;
+    border: #ccc solid;
+    border-width: 0 0 1px 1px;
+    background: #365778 url("/r/tpl/0/p/img/th_back.jpg") repeat-x top;
+    color: #FFFFFF;
+    font-weight: bold;
+    line-height: 120%;
+	font-size:12px;
+}
+
+table.table1 .th2 {
+    padding:7px 5px;
+    border: #ccc solid;
+    border-width: 0 0 1px 1px;
+    background: #73CECE url("/r/tpl/0/p/img/red_td.jpg") repeat-x top;
+    color: #FFFFFF;
+    font-weight: bold;
+    line-height: 120%;
+	font-size:12px;
+	width:150px;
+}
+
+table.table1 td {
+	background:url("/r/tpl/0/p/img/servertable_bg.png") repeat-x;
+    padding:7px 5px;
+	font-size:12px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #FFFFFF #ccc #999 #FFFFFF;
+    color: #000;
+    text-align:left;
+}
+
+/*THの横幅をかくてされないバージョン*/
+table.table2{
+	font-size:12px;
+    border: 1px #ccc solid;
+    border-spacing: 0;
+    background: #fff;
+}
+
+table.table2 th {
+    padding:7px 5px;
+    border: #ccc solid;
+    border-width: 0 0 1px 1px;
+    background: #73CECE url("/r/tpl/0/p/img/webserver-td.gif") repeat-x top;
+    color: #FFFFFF;
+    font-weight: bold;
+    line-height: 120%;
+	font-size:12px;
+
+}
+
+table.table2 td {
+	background:url("/r/tpl/0/p/img/servertable_bg.png") repeat-x;
+    padding:7px 5px;
+	font-size:12px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #FFFFFF #ccc #999 #FFFFFF;
+    color: #000;
+}
+
+.center{
+    text-align: center;
+}
+table.table1 .td2 {
+	background:url("/r/tpl/0/p/img/servertable_bg2.png") repeat-x;
+    padding:7px 5px;
+	font-size:12px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #FFFFFF #ccc #FFFFFF #FFFFFF;
+    color: #000;
+    text-align:left;
+}
+
+/*アップロード　プロブレスバー*/
+.upload_area{
+	position:relative;
+	width:790px;
+	height:60px;
+	margin-top:10px;
+}
+.progress_bar{
+	position:absolute;
+	width:790px;
+	height:60px;
+	background-image:url(/r/tpl/0/p/img/progres_bacnk.png);
+	margin:0 auto;
+}
+/*アップロードするときのテーブル*/
+.upload_back{
+	position:absolute;
+	background-image:url(/r/tpl/0/p/img/upload_back.png);
+	background-repeat:no-repeat;
+	height:60px;
+	z-index:2;
+}
+/*アップロードが成功した時のテーブル*/
+.list_back{
+	background-image:url(/r/tpl/0/p/img/list_back_center.png);
+	background-repeat:no-repeat;
+	height:60px;
+	z-index:2;
+}
+
+/*アップロードステータス*/
+.upload_status{
+	background-color:#ccccff;
+	background-repeat:repeat-x;
+	float:left;
+	font-size:10px;
+	padding:2px 7px 2px 7px;
+	margin-right:10px;
+}
+
+.progress_color{
+	position:absolute;
+	margin-top:30px;
+	margin-left:10px;
+	z-index:1;
+}
+/*アップロードしている時の色*/
+.upload_color{
+	background-color:#7D7DFF;
+}
+/*変換している時の色*/
+.encode_color{
+	background-color:#FFB51A;
+}
+
+/*アップロードステータス*/
+.encode_status{
+	background-color:#ffcc66;
+	background-repeat:repeat-x;
+	float:left;
+	font-size:10px;
+	padding:2px 7px 2px 7px;
+	margin-right:10px;
+}
+
+/*アップロードステータス*/
+.success_status{
+	background-color:#DDDDDD;
+	background-repeat:repeat-x;
+	float:left;
+	font-size:10px;
+	padding:2px 7px 2px 7px;
+	margin-right:10px;
+}
+
+/*アップロードステータス*/
+.error_status{
+	background-color:#ffcc66;
+	background-repeat:repeat-x;
+	float:left;
+	font-size:10px;
+	padding:2px 7px 2px 7px;
+	margin-right:10px;
+	color:red;
+}
+
+/*アップロード時の詳細情報*/
+.detail_area{
+	background-image:url(/r/tpl/0/p/img/detail_back.jpg);
+	background-repeat:repeat-y;
+	width:790px;
+
+}
+
+/*アップロード完了後のメニュー*/
+.upload_menu{
+	width:770px;
+	height:31px;
+}
+
+/*アップロード完了後に各メニューボタンを押したときにでてくるテーブル*/
+.upload_menu_content{
+	margin-left:10px;
+	margin-top:8px;
+	margin-bottom:10px;
+}
+.upload_menu_content td{
+	font-size:12px;
+}
+
+.list_title{
+	position:relative;
+	background-image:url(/r/tpl/0/p/img/menu_title_back.jpg);
+}
+
+.list_center{
+	position:relative;
+	background-image:url(/r/tpl/0/p/img/list_back_center.png);
+}
+
+
+
+.list_center2{
+	position:relative;
+	background-image:url(/r/tpl/0/p/img/list_back_center_live.png);
+}
+
+.list_center3{
+	position:relative;
+	background-image:url(/r/tpl/0/p/img/list_back_center_elearn.png);
+}
+
+.list_center td,
+.list_center2 td,
+.list_center3 td
+{
+	font-size:12px;
+}
+
+.detail_center{
+	position:relative;
+	background-image:url(/r/tpl/0/p/img/list_back_center2.png);
+	height:100%;
+}
+
+.detail_center td{
+	height:100%;
+}
+.footer{
+	position:absolute;
+	bottom:0px;
+	left:0px;
+}
+.footer a{
+	color:#FFFFFF;
+	text-decoration:none;
+	font-size:12px;
+}
+
+.list_menu{
+
+	background-image:url('/r/tpl/0/p/img/list_menu_back.jpg');
+	background-repeat:no-repeat;
+	background-color:#FFFFFF;
+	float:left;
+	width:80px;
+	text-align:center;
+	margin-left:3px;
+	 border-style: solid;
+    border-width: 1px;
+	border-color: #90A5CA #90A5CA #90A5CA #90A5CA;
+
+}
+
+.list_menu2{
+
+	background-image:url('/r/tpl/0/p/img/list_menu_back.jpg');
+	background-repeat:no-repeat;
+	background-color:#FFFFFF;
+	float:left;
+	width:150px;
+	text-align:center;
+	margin-left:3px;
+	 border-style: solid;
+    border-width: 1px;
+	border-color: #90A5CA #90A5CA #90A5CA #90A5CA;
+}
+
+.new_list_menu{
+	border-color: #90A5CA #90A5CA #90A5CA #90A5CA;
+	border-style: solid;
+    border-width: 1px;
+    border-width: 1px;
+	float:left;
+	margin-left:5px;
+	text-align:center;
+	font-weight:bold;
+
+}
+.step_off{
+
+	background-image:url('/r/tpl/0/p/img/list_menu_back3.png');
+	background-repeat:no-repeat;
+	background-color:#FFFFFF;
+	background-position: right;
+	color:#3A5999;
+
+}
+
+.step_on{
+	background-image:url('/r/tpl/0/p/img/list_menu_back3_on.png');
+	background-repeat:no-repeat;
+	background-color:#3A5999;
+	background-position: right;
+	color:#FFFFFF;
+	/*
+	background-color:#FFFFFF;
+	float:left;
+	width:170px;*/
+}
+
+.topRadi{
+	border-radius:5px 5px 0px 0px;
+		-webkit-border-radius:5px 5px 0px 0px;
+		-moz-border-radius:5px 5px 0px 0px;
+}
+
+.allRadi{
+	border-radius:4px 4px 4px 4px;
+		-webkit-border-radius:4px 4px 4px 4px;
+		-moz-border-radius:4px 4px 4px 4px;
+}
+
+.list_num_back{
+	background-image:url('/r/tpl/0/p/img/list_num_back.png');
+	background-repeat:repeat-x;
+	float:left;
+	padding:0px 5px 0px 5px;
+	margin-left:5px;
+}
+
+.input_join{
+	padding:5px;
+	font-size:12px;
+	border-color: #90A5CA #90A5CA #90A5CA #90A5CA;
+	
+}
+
+.el_timeline td{
+	padding:5px;
+	font-size:12px;
+	letter-spacing:1.5;
+}
+
+.el_timeline input{
+	width:30px;
+	ime-mode: inactive;
+
+}
+
+/*お知らせの表示*/
+.news{
+	position:relative;
+	border:solid 1px;
+	border-color:#3B5999;
+	width:785px;
+	margin-top:20px;
+
+}
+.news_title{
+	position:absolute;
+	background:url(/r/tpl/0/p/img/news.jpg)no-repeat;
+	background-color:#3B5999;
+	width:85px;
+	height:100%;
+	float:left;
+	background-position: center;
+}
+.news_content{
+	margin-left:85px;
+	padding:5px;
+	line-height:1.3;
+	text-align:left;
+	font-size:12px;
+}
+
+/*TOP右側の名前をクリックした時にでる、ログアウトボタン*/
+#logout_btn{
+
+	position:absolute;
+	width:120px;
+	height:30px;
+	background-color:#133783;
+	position:absolute;
+	color:#FFFFFF;
+	right:0px;
+	margin-top:5px;
+	border:#FFFFFF;
+
+}
+
+#myhome_btn{
+	position:absolute;
+	width:120px;
+	height:30px;
+	background-color:#133783;
+	position:absolute;
+	color:#FFFFFF;
+	right:0px;
+	margin-top:5px;
+	border:#FFFFFF;
+}
+
+#top_rigth_loginadmin{
+	width:170px;
+	color:#FFFFFF;
+	font-size:12px;
+	position:relative;
+	cursor:pointer;
+}
+
+/*有料サービス申し込みの赤いアラートTDのバック*/
+.red_th{
+	background-image:url(/r/tpl/0/p/img/red_td.jpg);
+}
+
+.top_content{
+	width:900px;
+	font-size:14px;
+	padding:10px;
+	text-indent:10px;
+	text-align:left;
+}
+
+/*ショートカットメニュー*/
+#short_menu{
+	background-color:#133783;
+	width:200px;
+	position:fixed;
+	top:0px;
+	right:0px;
+	margin-right:5px;
+	margin-top:35px;
+	text-align:left;
+	padding:5px;
+	color:#FFFFFF;
+	float:right;
+	z-index:10;
+}
+
+#short_menu a{
+	color:#FFFFFF;
+	text-decoration: none;
+}
+
+#content{
+	position:relative;
+}
+
+/*見積もり印刷用で利用*/
+.footer{
+	position:relative; 
+	width:100%;
+	height:50px;
+	bottom:0px;
+	font-size:12px;
+	left:0px;
+}
+
+/*一覧表示のゴミみ箱*/
+.dustbox{
+
+	background:url("/r/tpl/0/p/img/dust_box2.png") no-repeat;
+	width:20px;
+	height:20px;
+	float:right;
+	margin-right:10px;
+	cursor:pointer;
+
+}

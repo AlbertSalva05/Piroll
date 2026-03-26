@@ -1,0 +1,886 @@
+/**
+ * ashino transmitter version 1.4.0
+ */
+/**
+ * Ashinoにデータを上手いこと送信する
+ * 	jqueryとlodashに依存
+ * FIXME:全体的にES2015に沿った実装にしたい。ブラウザ対応状況を確認する必要がある
+ * 			何ならコードをビルドする方式に変えたいが…
+ * FIXME:コールバック関数を受け取るようにインターフェイスを修正する。
+ * 		→例えばデバッグ時に呼び出し側のhtmlに描画する等
+ * 		→prePostとかafterPostが今の所候補
+ */
+
+/**
+ * AshinoIdcfTransmitter
+ * PlayerMaker用新アクセス解析送信クラス
+ * プレイヤーのアクセス解析送信クラス
+ * 	内部にデータ送信を担当するRepositoryクラスを持っている
+ *  内部に最終のデータ整形を担当するHandlerクラスを持っている
+ * 		FIXME:名前をHandlerから変更すべき。内容と名前が乖離していて意味が理解しづらい
+ * 2021年現在開発中のAHINOのtreace3.videog.jpへデータ送信する
+ * 基本的な動作
+ *  * アクセス解析に必要なデータを受け取り
+ * 	* 必要ならデータ解析
+ * 	* データを整形
+ *  * データを送信
+ * FIXME:上記の流れになるようにコードを修正すべき。データの整形と送信が一体化しているので見通しが悪い
+ */
+//'use strict';
+
+var AshinoIdcfTransmitter = function (subdomain) {
+  //////////////////////////////////////////////
+  // 内部的な定数
+
+  // プレイヤーイベント名の一覧
+  // ここで一括で定義することで一覧性を上げ番号が被ってしまうことを避ける
+  // 名前ごとコメントアウトすれば処理そのものを避けられる
+  this._type_map = {
+    'ready': -1, // 0
+    'play': -1, // 1
+    'pause': -1, // 無視
+    'seek': -1, // 2
+    'seeked': -1, // 無視
+    'timeupdate': -1, // 2
+    'beforeunload': -1, // 8
+    'complete': -1  // 9 必ず使うものを最後に置くことでカンマの煩わしさがない
+  };
+
+  //////////////////////////////////////////////
+  // メンバ変数
+
+  // 現在の再生地点
+  this._current_position = 0;
+
+  // プレイイベントの送信フラグ
+  this._sent_play_event = false;
+
+  // 視聴ブロック、視聴時間を計算するオブジェクトの生成
+  this._viewing_time_calculator = new AshinoIdcfViewingTimeCalculator();
+
+  /**
+   * analyticsイベントを登録するインスタンス
+   * @var {AshinoIdcfTransmitter.Handler}
+   */
+  this._handler = new AshinoIdcfTransmitter.Handler(this._viewing_time_calculator, subdomain);
+
+  // 完了したかのフラグ
+  // play時:false、complete時:true
+  this._is_completed = true;
+
+  // beforeunloadが実行されたかのフラグ
+  this._is_beforeunloaded = false;
+};
+
+//////////////////////////////////////////////
+// 外部I/F
+//////////////////////////////////////////////
+
+// 外部から見た送信（実行）メソッド
+AshinoIdcfTransmitter.prototype.execute = function (ev_data) {
+  // 送信データの雛形
+  // 各処理メソッド内でundefinedのエラーをなくすために
+  // ここでは項目をコメントアウトしないことを推奨
+  const post_data = {
+    'timezone': 'Asia/Tokyo',
+    'member_id': ev_data.member_id,
+    'media_id': ev_data.media_access_id,
+    'live': ev_data.is_live,
+    'player_session': ev_data.player_session,
+    // 'audience_id'		: null, // 下記で別途対応
+    'audience_session': ev_data.audience_session,
+    'int1': 0,
+    'int2': 0,
+    'str1': ev_data.str1,
+    'str2': ev_data.str2,
+    'event_type': -1 // デフォルト無効値・必ず使うものを最後に置くことでカンマの煩わしさがない
+  };
+  // 存在する場合にのみ送信する:視聴者id
+  if (typeof (ev_data.aud_id) !== "undefined" && ev_data.aud_id) {
+    post_data.audience_id = ev_data.aud_id;
+  }
+
+  // タイプ番号の確認
+  // 名前とタイプ番号の定義が無いものは以後の処理をしない
+  if (typeof (this._type_map[ev_data.name]) === "undefined") {
+    return;
+  }
+
+  // このクラスにイベント名が実装されていなければ何もしない
+  const func_name = '_' + ev_data.name;
+  if (typeof (this[func_name]) === 'undefined' || this[func_name] == null) {
+    return;
+  }
+  // post_dataを各observeメソッドに渡して登録を実行
+  this[func_name](post_data, ev_data);
+};
+
+//////////////////////////////////////////////
+// 内部I/F：一般
+//////////////////////////////////////////////
+AshinoIdcfTransmitter.prototype._toObject = function (val) {
+  if (val === null || val === undefined) {
+    throw new TypeError('Object.assign cannot be called with null or undefined');
+  }
+
+  return Object(val);
+}
+AshinoIdcfTransmitter.prototype._assign = function (target, source) {
+  if (Object.assign != null && typeof (Object.assign) === 'function') {
+    // return Object.assign(target, source);
+  }
+
+  const getOwnPropertySymbols = Object.getOwnPropertySymbols;
+  const hasOwnProperty = Object.prototype.hasOwnProperty;
+  const propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+  // 以下Object.assignが無い場合のpolyfill
+  let from;
+  let to = this._toObject(target);
+  let symbols;
+
+  for (let s = 1; s < arguments.length; s++) {
+    from = Object(arguments[s]);
+
+    for (let key in from) {
+      if (hasOwnProperty.call(from, key)) {
+        to[key] = from[key];
+      }
+    }
+
+    if (getOwnPropertySymbols) {
+      symbols = getOwnPropertySymbols(from);
+      for (let i = 0; i < symbols.length; i++) {
+        if (propIsEnumerable.call(from, symbols[i])) {
+          to[symbols[i]] = from[symbols[i]];
+        }
+      }
+    }
+  }
+
+  return to;
+};
+
+
+//////////////////////////////////////////////
+// 内部I/F：プレイヤーイベントのオブザーブ
+//////////////////////////////////////////////
+
+// readyイベントの処理
+AshinoIdcfTransmitter.prototype._ready = function (post_data, ev_data) {
+  //送信データの作成
+  post_data1 = this._assign({}, post_data);
+  this._handler.ready(post_data1, ev_data);
+};
+
+
+// playイベントの処理
+AshinoIdcfTransmitter.prototype._play = function (post_data, ev_data) {
+  let post_data1;
+
+  // 送信済みフラグを確認
+  if (!this._sent_play_event) {
+    // analytics.play eventは未送信
+    post_data1 = this._assign({}, post_data);
+    this._handler.play(post_data1, ev_data);
+  }
+
+  // フラグを更新
+  this._sent_play_event = true;
+  // 完了フラグを更新
+  this._is_completed = false;
+
+  return post_data;
+};
+
+// pauseイベントの処理
+AshinoIdcfTransmitter.prototype._pause = function (post_data, ev_data) { };
+
+// seekイベントの処理
+AshinoIdcfTransmitter.prototype._seek = function (post_data, ev_data) {
+  let post_data1;
+
+  post_data1 = this._assign({}, post_data);
+  this._handler.viewing(post_data1, ev_data, 'seek');
+
+};
+// seekedイベントの処理
+AshinoIdcfTransmitter.prototype._seeked = function (post_data, ev_data) { };
+
+// timeupdateイベントの処理
+AshinoIdcfTransmitter.prototype._timeupdate = function (post_data, ev_data) {
+  let post_data1;
+
+  // 最新データへの更新
+  this._current_position = Math.floor(ev_data.value);
+
+  post_data1 = this._assign({}, post_data);
+  this._handler.viewing(post_data1, ev_data, 'timeupdate');
+};
+
+// completeイベントの処理
+AshinoIdcfTransmitter.prototype._complete = function (post_data, ev_data) {
+  let post_data1, post_data2;
+
+  // analytics.completeをpost
+  post_data1 = this._assign({}, post_data);
+  this._handler.complete(post_data1, ev_data);
+
+  // analytics.viewingをpost
+  post_data2 = this._assign({}, post_data);
+  this._handler.viewing(post_data2, ev_data, 'complete');
+
+  // playイベントのフラグをリセット
+  this._sent_play_event = false;
+
+  // 計算終了したので計算機をリセット
+  this._viewing_time_calculator = new AshinoIdcfViewingTimeCalculator();
+  //  ハンドラーもリセット
+  this._handler = new AshinoIdcfTransmitter.Handler(this._viewing_time_calculator);
+  // 完了フラグを更新
+  this._is_completed = true;
+};
+
+// beforeunloadイベントの処理
+AshinoIdcfTransmitter.prototype._beforeunload = function (post_data, ev_data) {
+  let post_data1;
+
+  // コンプリートフラグを確認
+  if (this._is_completed) {
+    // コンプリート済み又は再生してない
+    // 何もしない
+    return;
+  }
+  // beforeunloadフラグを確認
+  if (this._is_beforeunloaded) {
+    // すでに別なイベントでbeforeunloadが実行済み
+    // 何もしない
+    return;
+  }
+  // フラグを立てる
+  this._is_beforeunloaded = true;
+
+  // ev_dataに現在の再生位置を設定する。
+  // ＊playerイベントではないのでここで追加する。
+  ev_data.value = this._current_position;
+
+  post_data1 = this._assign({}, post_data);
+  this._handler.viewing(post_data1, ev_data, 'beforeunload');
+};
+
+// ********************************
+// Repository
+// サーバに登録する
+AshinoIdcfTransmitter.Repository = function (subdomain) {
+  if (!subdomain) {
+    subdomain = "trace40";
+  }
+  this._url = 'https://' + subdomain + '.videog.jp/accumulate';
+  this._retryLimit = 3;
+  this._retryInterval = 800;
+};
+//////////////////////////////////////////////
+// 外部I/F：登録メソッド
+//////////////////////////////////////////////
+// 登録処理を実行する
+AshinoIdcfTransmitter.Repository.prototype.post = function (post_data) {
+  this._get(this._url, post_data);
+}
+// 登録処理を実行する
+AshinoIdcfTransmitter.Repository.prototype.retryPost = function (post_data) {
+  this._retryGet(this._url, post_data);
+}
+//////////////////////////////////////////////
+// 内部I/F：ajax
+//////////////////////////////////////////////
+/**
+* jquery.postのラッパ
+* @param {string} url
+* @param {object} post_data
+*/
+AshinoIdcfTransmitter.Repository.prototype._post = function (url, post_data) {
+  $.post(url, post_data)
+    .fail(function () {
+      console.log("AshinoIdcfTransmitter: failed to post with post_data.event_type=" + post_data.event_type);
+    });
+}
+/**
+* jquery.getのラッパ
+* @param {string} url
+* @param {object} post_data
+*/
+AshinoIdcfTransmitter.Repository.prototype._get = function (url, post_data) {
+  $.get(url, post_data)
+    .fail(function () {
+      console.log("AshinoIdcfTransmitter: failed to get with post_data.event_type=" + post_data.event_type);
+    });
+}
+/**
+* jquery.ajaxのラッパ。失敗した場合にリトライする
+* @param {string} url
+* @param {object} post_data
+*/
+AshinoIdcfTransmitter.Repository.prototype._retryGet = function (url, post_data) {
+  const _retryLimit = this._retryLimit;
+  const _retryInterval = this._retryInterval;
+  $.ajax({
+    url: url,
+    type: 'GET',
+    data: post_data,
+    tryCount: 0,
+    retryLimit: _retryLimit,
+    retryInterval: _retryInterval,
+    success: function (json) {
+      //do something
+      console.log(json);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      // responseText=1ならerrorにならないはずだが、念の為に判定する。
+      if (xhr.responseText === "1") {
+        return;
+      }
+      // 負荷対策で以下の場合はリトライしない。
+      if (xhr.status == 500 || xhr.status == 503) {
+        return;
+      }
+      // retry start
+      this.tryCount++;
+      this.retryInterval = this.retryInterval * 2;
+      if (this.tryCount <= this.retryLimit) {
+        //try again
+        const self = this;
+        setTimeout(function () {
+          $.ajax(self);
+        }, this.retryInterval);
+        return;
+      }
+      return;
+    }
+  });
+}
+
+
+// ********************************
+// Handler
+// eventの2次受け。analyticsイベントに対応する
+AshinoIdcfTransmitter.Handler = function (calculator, subdomain) {
+  this._calculator = calculator;
+  this._subdomain = subdomain;
+
+  // analyticsイベント名とイベント番号のマッピング
+  // ここで一括で定義することで一覧性を上げ番号が被ってしまうことを避ける
+  // -1を設定すれば送信処理だけを避けられる
+  this._type_map = {
+    'ready': 0, // 0	準備完了
+    'play': 1, // 1	再生
+    'viewing': 2, // 2	視聴
+    'complete': 3  // 必ず使うものを最後に置くことでカンマの煩わしさがない
+  };
+};
+//////////////////////////////////////////////
+// 外部I/F：handleメソッド
+//////////////////////////////////////////////
+// analytics event:ready
+AshinoIdcfTransmitter.Handler.prototype.ready = function (post_data, ev_data) {
+  // イベントタイプの設定
+  post_data.event_type = this._mapEventType('ready');
+
+  post_data.int1 = 0;
+  post_data.int2 = 0;
+
+  this._mightPost(post_data);
+}
+
+AshinoIdcfTransmitter.Handler.prototype.play = function (post_data, ev_data) {
+  // イベントタイプの設定
+  post_data.event_type = this._mapEventType('play');
+
+  post_data.int1 = 0;
+  post_data.int2 = 0;
+
+  this._mightPost(post_data);
+}
+
+// analytics event:viewing
+AshinoIdcfTransmitter.Handler.prototype.viewing = function (post_data, ev_data, type) {
+  let viewing_time_data = {};
+  let _complete_sec = 0.0;
+
+  // イベントタイプの設定
+  post_data.event_type = this._mapEventType('viewing');
+
+  //送信データの作成
+  // 視聴時間情報を計算
+  try {
+    if (type === 'timeupdate' && parseInt(ev_data.is_live, 10) === 1) {
+      // value: null
+      viewing_time_data = this._calculator.calcOnTimeupdateLive();
+    } else if (type === 'timeupdate') {
+      // value: position
+      viewing_time_data = this._calculator.calcOnTimeupdate(ev_data.value);
+    } else if (type === 'seek') {
+      // value1: position(before seek sec), value2: offset(after seek sec)
+      // viewing_time_data = this._calculator.calcOnSeek(ev_data.value1, ev_data.value2);
+      const _self = this;
+      this._calculator.calcAndPostOnSeekDebounce(ev_data.value1, ev_data.value2, _self, _.cloneDeep(post_data));
+    } else if (type === 'beforeunload') {
+      // value: position
+      viewing_time_data = this._calculator.calcOnBeforeunload(ev_data.value);
+    } else if (type === 'complete') {
+      // g_duration:
+      _complete_sec = parseInt(ev_data.g_duration, 10) / 1000;
+      viewing_time_data = this._calculator.calcOnComplete(_complete_sec);
+    } else {
+      throw new Error('no match viewing type');
+    }
+
+    // 視聴時間データの検証
+    this._validateViewingTimeData(viewing_time_data);
+
+    console.log('viewing_time_data : ' + JSON.stringify(viewing_time_data));
+
+    post_data.int1 = viewing_time_data.block;
+    post_data.int2 = viewing_time_data.viewing_time;
+  } catch (error) {
+    post_data.event_type = -1;
+    // console.log(error.name + ': ' + error.message);
+  }
+
+  this._mightPost(post_data);
+}
+
+// analytics event:complete
+AshinoIdcfTransmitter.Handler.prototype.complete = function (post_data, ev_data) {
+  // イベントタイプの設定
+  post_data.event_type = this._mapEventType('complete');
+
+  post_data.int1 = 0;
+  post_data.int2 = 0;
+
+  this._mightPost(post_data);
+}
+//////////////////////////////////////////////
+// 内部I/F：一般
+//////////////////////////////////////////////
+AshinoIdcfTransmitter.Handler.prototype._mapEventType = function (event_name) {
+  return this._type_map[event_name];
+  // return this._type_map[ev_data.name];;
+}
+
+/**
+* 視聴時間データの検証。問題あれば例外を投げる
+*
+* @param {object | undefined} viewing_time_data
+*/
+AshinoIdcfTransmitter.Handler.prototype._validateViewingTimeData = function (viewing_time_data) {
+  // viewing_time_dataがundefinedの時はpostしない
+  if (viewing_time_data === void (0)) {
+    throw new Error('undefined : viewing_time_data');
+  }
+  // viewing_time_dataが空オブジェクトの時はpostしない
+  if (viewing_time_data.block === void (0) || viewing_time_data.viewing_time === void (0)) {
+    throw new Error('block or viewing_time is undefined');
+  }
+  // ブロックか視聴時間が0なら無効な値なのでpostしない
+  if (viewing_time_data.block === 0 || viewing_time_data.viewing_time === 0) {
+    throw new Error('block or viewing_time is 0 value');
+  }
+}
+
+AshinoIdcfTransmitter.Handler.prototype._validatePostdata = function (post_data) {
+  return post_data && typeof (post_data.event_type) === "number" && post_data.event_type >= 0;
+}
+AshinoIdcfTransmitter.Handler.prototype._mightPost = function (post_data) {
+  // 不正なpost_dataだったら何もしない
+  if (!this._validatePostdata(post_data)) {
+    return;
+  }
+  // 登録処理の実行
+  const repo = new AshinoIdcfTransmitter.Repository(this._subdomain);
+  // リトライ必要なイベントかを判定する
+  if (
+    post_data.event_type === 0		// ready
+    || post_data.event_type === 1	// play
+    || post_data.event_type === 3	// complete
+  ) {
+    repo.retryPost(post_data);
+    return;
+  }
+  repo.post(post_data);
+}
+
+
+// ********************************
+// AshinoIdcfViewingTimeCalculator
+// 視聴時間を計算するクラス
+// AshinoIdcfTransmitterで内部的に使用する視聴時間を管理、計算する
+
+const AshinoIdcfViewingTimeCalculator = function () {
+  /**
+    * 1ブロックの秒数
+    * @property {int} _one_block_sec
+    */
+  this._one_block_sec = 10;
+  //現在の再生時間（小数点切り捨て後）
+  this._current_time = 0;
+
+  //同時接続集計用変数
+  this._pre_block = 0;  //timeupdateでの送信済みブロック
+  this._current_block = -1;  //現在ブロック
+  this._skip_block = 0;  //スキップするタイムブロック
+
+  // 前回のシークの履歴
+  this._pre_seek = { "before": -1, "after": -1 };
+
+  /**
+    * 直前にシークが発生したかのフラグ
+    * 	seekイベント前にseek後のtimeupdateイベントが実行される。
+    * 	これは想定外の動作で、seekされたかどうかをtimeupdateイベント単独で判定出来ない
+    * 	これに対応する為に内部的にシークしたかの判定用のプロパティ
+    *
+    * @param {bool}
+    */
+  this._is_seeked = false;
+
+  /**
+    * 前回の再生時間
+    * 	seekイベント前にseek後のtimeupdateイベントが実行される。
+    * 	これは想定外の動作で、seekされたかどうかをtimeupdateイベント単独で判定出来ない
+    * 	これに対応する為に内部的に再生時間を管理する為のプロパティ
+    *
+    * @param {int}
+    */
+  this._pre_time = 0;
+
+}
+
+//////////////////////////////////////////////
+// 外部I/F
+//////////////////////////////////////////////
+AshinoIdcfViewingTimeCalculator.prototype.calcOnComplete = function (time) {
+  //
+  return {
+    "block": this._calcBlock(time) + 1,
+    // "block": this._calcBlock(time),
+    // "viewing_time": this._calcViewingTime(time),
+    "viewing_time": this._calcViewingTimeOnComplete(time),
+  };
+}
+
+AshinoIdcfViewingTimeCalculator.prototype.calcOnBeforeunload = function (time) {
+  // completeと同じ内容を返す
+  return {
+    "block": this._calcBlock(time) + 1,
+    // "block": this._calcBlock(time),
+    // "viewing_time": this._calcViewingTime(time),
+    "viewing_time": this._calcViewingTimeOnComplete(time),
+  };
+}
+
+
+/**
+* seekイベント発生した時の視聴時間計算
+*/
+AshinoIdcfViewingTimeCalculator.prototype.calcOnSeek = function (before_time, after_time) {
+  let before_block = 0;
+  let before_viewing_time = 0;
+  let after_block = 0;
+
+  // とりあえずフラグを立てる
+  this._is_seeked = true;
+
+  // 先送りか巻き戻しかを判定する。+：先送り、-：巻き戻し
+  const diff_time = after_time - before_time;
+
+  // 各ブロックと再生時間を計算
+  // before_blockはインクリメントしている事に注意
+  before_block = this._calcBlock(before_time) + 1;
+  // before_block = this._calcBlock(before_time);
+  before_viewing_time = this._calcViewingTimeOnSeekBefore(before_time);
+  after_block = this._calcBlock(after_time);
+
+  // timeupdateの時に使用する値を保持する
+  this._skip_block = after_block;
+  if (diff_time < 0) {
+    this._pre_block = after_block;
+  }
+
+  // 前回のシーク情報を更新する
+  this._pre_seek = { "before": before_time, "after": after_time };
+
+  return {
+    "block": before_block,
+    "viewing_time": before_viewing_time,
+  };
+}
+
+/**
+* seekイベント発生した時の視聴時間計算とtraceXX.videog.jpへの送信
+* seekが連続で発生する状況がある
+*  * シークバーをドラッグで操作
+*  * キーボードの左右を連続で操作
+*  * 10秒進む（戻る）ボタンを連続でクリック
+* seekが単発 or 連続で発生した場合の両方を考慮して正しく実行する
+* debounceは同じイベントが連続して発生した際にイベントを間引く関数。
+*/
+AshinoIdcfViewingTimeCalculator.prototype.calcAndPostOnSeekDebounce = _.debounce(function (before_time, after_time, _self, post_data) {
+  try {
+    const viewing_time_data = this.calcOnSeek(this._pre_time, after_time);
+
+    // 視聴時間データの検証
+    _self._validateViewingTimeData(viewing_time_data);
+
+    console.log('viewing_time_data : ' + JSON.stringify(viewing_time_data));
+
+    post_data.int1 = viewing_time_data.block;
+    post_data.int2 = viewing_time_data.viewing_time;
+  } catch (error) {
+    post_data.event_type = -1;
+    // console.log(error.name + ': ' + error.message);
+  }
+  _self._mightPost(post_data);
+}, 1000)
+
+AshinoIdcfViewingTimeCalculator.prototype.calcOnTimeupdate = function (time) {
+
+  let current_block = -1;
+
+  // 無視して良い条件に当てはまるか、確認する
+  if (this._isIgnoreTimeupdate(time) === true) {
+    return;
+  }
+  // フラグを下ろす
+  this._is_seeked = false;
+  // 直前の再生時間を記録する
+  this._pre_time = time;
+
+  //現在の再生時間とブロック
+  if (time >= 0) {
+    current_block = this._calcBlock(time);
+  }
+
+  // blockを確認して、必要なら例外投げる
+  if (this._skip_block === current_block) {
+    throw new Error('same block : skip');
+  }
+  if (this._pre_block === current_block) {
+    throw new Error('same block : pre');
+  }
+
+  const data = {
+    "block": current_block,
+    "viewing_time": this._calcViewingTimeOnTimeupdate(time),
+  };
+
+  // 前回のブロックを更新
+  this._pre_block = current_block;
+  // 前回シーク情報をリセット
+  this._pre_seek = { "before": -1, "after": -1 };
+
+  return data;
+
+}
+
+AshinoIdcfViewingTimeCalculator.prototype.calcOnTimeupdateLive = function () {
+  let current_block = -1;
+  // liveの場合は現在のunixtime(sec)を再生秒数として計算する
+  const time = this._currentUnixTime();
+  // console.log(time);
+  // 初回の場合は初期_pre_blockを設定して終了
+  if (this._pre_block === 0) {
+    this._pre_block = this._calcBlock(time);
+    return;
+  }
+
+  //現在の再生時間とブロック
+  if (time >= 0) {
+    current_block = this._calcBlock(time);
+  }
+
+  // blockを確認して、必要なら例外投げる
+  if (this._skip_block === current_block) {
+    throw new Error('same block : skip');
+  }
+  if (this._pre_block === current_block) {
+    throw new Error('same block : pre');
+  }
+  // 2block時間以上の一時停止をしていたかを判別する
+  if (current_block - this._pre_block !== 1) {
+    // 前回ブロックを更新して例外投げる
+    this._pre_block = this._calcBlock(time);
+    throw new Error('many delta block');
+  }
+
+  const data = {
+    "block": current_block,
+    "viewing_time": this._calcViewingTimeOnTimeupdate(time),
+  };
+
+  // 前回のブロックを更新
+  this._pre_block = current_block;
+  return data;
+
+}
+
+//////////////////////////////////////////////
+// 内部I/F：イベントごとの処理
+//////////////////////////////////////////////
+/**
+* timeupdateでの視聴時間を計算する
+* @param {float} time 再生時間の秒数
+*/
+AshinoIdcfViewingTimeCalculator.prototype._calcViewingTimeOnTimeupdate = function (current_time) {
+  let pre_after_time = -1;
+  let pre_after_block = -1;
+  let current_block = -1;
+
+  // 前回のseek.after
+  pre_after_time = this._pre_seek.after;
+
+  // デフォルト値(seekしてない or seekリセットされた)なら、_one_block_secでOK
+  if (pre_after_time < 0) {
+    return this._one_block_sec;
+  }
+
+  pre_after_block = this._calcBlock(pre_after_time) + 1;
+  // pre_after_block = this._calcBlock(pre_after_time);
+  current_block = this._calcBlock(current_time);
+  // 別ブロックなら、_one_block_secでOK
+  if (pre_after_block !== current_block) {
+    return this._one_block_sec;
+  }
+
+  return this._one_block_sec - this._calcViewingTime(pre_after_time);
+}
+
+/**
+* timeupdateでの視聴時間を計算する
+* @param {float} time 再生時間の秒数
+*/
+AshinoIdcfViewingTimeCalculator.prototype._calcViewingTimeOnComplete = function (current_time) {
+  let pre_after_time = -1;
+  let pre_after_block = -1;
+  let current_block = -1;
+
+  // 前回のseek.after
+  pre_after_time = this._pre_seek.after;
+
+  // デフォルト値(seekしてない or seekリセットされた)なら、_one_block_secでOK
+  if (pre_after_time < 0) {
+    return this._calcViewingTime(current_time);
+  }
+
+  pre_after_block = this._calcBlock(pre_after_time) + 1;
+  // pre_after_block = this._calcBlock(pre_after_time);
+  current_block = this._calcBlock(current_time);
+  // 別ブロックなら、_one_block_secでOK
+  if (pre_after_block === current_block) {
+    return this._calcViewingTime(current_time);
+  }
+
+  return this._calcViewingTime(current_time) - this._calcViewingTime(pre_after_time);
+}
+
+/**
+* seek直前での視聴時間を計算する
+* @param {float} time 再生時間の秒数
+*/
+AshinoIdcfViewingTimeCalculator.prototype._calcViewingTimeOnSeekBefore = function (before_time) {
+  let pre_after_time = -1;
+  let pre_after_block = -1;
+  let before_block = -1;
+
+
+  // 前回のseek.after
+  pre_after_time = this._pre_seek.after;
+
+  // デフォルト値(seekしてない or seekリセットされた)なら通常の計算でOK
+  if (pre_after_time < 0) {
+    return this._calcViewingTime(before_time);
+  }
+
+  pre_after_block = this._calcBlock(pre_after_time);
+  before_block = this._calcBlock(before_time);
+  // 別ブロックなら通常の計算でOK
+  if (pre_after_block !== before_block) {
+    return this._calcViewingTime(before_time);
+  }
+
+  // 同一ブロック内でseekしている事を考慮して計算
+  return Math.floor(before_time) - Math.floor(pre_after_time)
+}
+
+/**
+* 1ブロックでの視聴時間を計算する
+* @param {float} time 再生時間の秒数
+*/
+AshinoIdcfViewingTimeCalculator.prototype._calcViewingTime = function (time) {
+  // 区切り時間。_one_block_sec(10sec)の倍数
+  let _separation_time = 0;
+  // 小数点切り捨てした時間
+  let _floor_time = 0;
+  // 計算された視聴時間
+  let _viewing_time = 0;
+
+  // 各計算の開始
+  _separation_time = Math.floor(time / this._one_block_sec) * this._one_block_sec;
+  _floor_time = Math.floor(time);
+  _viewing_time = _floor_time - _separation_time;
+
+  return _viewing_time;
+}
+
+/**
+* ブロック数を計算する
+* @param {float} time 再生時間の秒数
+*/
+AshinoIdcfViewingTimeCalculator.prototype._calcBlock = function (time) {
+  return Math.floor(time / this._one_block_sec);
+}
+
+/**
+* 現在時刻のunixtime(sec)を取得する
+* @returns {float}
+*/
+AshinoIdcfViewingTimeCalculator.prototype._currentUnixTime = function () {
+  return (new Date()).getTime() / 1000;
+}
+
+/**
+* 前回の再生時間と現在の再生時間の差を求める
+* 	seekによって再生時間が戻る可能性があるのでそれを考慮して計算
+* @param {int} currentTime
+* @return {int}
+*/
+AshinoIdcfViewingTimeCalculator.prototype._diffTime = function (current_time) {
+  return current_time - this._pre_time;
+}
+
+/**
+* timeupdateイベントを無視するかどうかを判定する。
+*	想定ではseek→timeupdateの順。実際はtimeupdate(timeがseek後の再生時間)→seekの順。
+* 	seekイベント直前のtimeupdateは無視したいが、その為の判定メソッド。
+* 	仕様的にややこしいのでここで判定する
+* 	フラグが立つ前に直前の再生時間の差がマイナスの時や大きい場合は無視する
+*
+* @param {int} time
+* @returns {bool}
+*/
+AshinoIdcfViewingTimeCalculator.prototype._isIgnoreTimeupdate = function (time) {
+  // 直前にシークイベントが発生したので、無視してはいけない
+  if (this._is_seeked === true) {
+    return false;
+  }
+  // 直前にシークイベントは発生していないが、直前の再生時間の差がマイナス
+  const _diff = this._diffTime(time);
+  if (_diff < 0) {
+    return true;
+  }
+  // 直前にシークイベントは発生していないが、直前の再生時間の差が大きい（3倍速でも0.8秒以上には開かない）
+  if (_diff >= 0.8) {
+    return true;
+  }
+  // 通常の再生時はこのパス
+  return false;
+}
+

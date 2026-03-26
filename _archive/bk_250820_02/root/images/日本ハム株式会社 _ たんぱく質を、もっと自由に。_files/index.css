@@ -1,0 +1,257 @@
+.mod_s_mt25e{
+	margin-top: 2.5em!important;
+}
+.home-notice-layout__head {
+	color: #e6002d!important;
+}
+.home-intro{
+	background: none;
+}
+.home-news-notice{
+	margin-top: 0;
+}
+.col-crl .cd-2-blank,
+.col-crl .cd-2{
+	margin-top: 0;
+	box-shadow: none;
+}
+.col-crl .cd-2-blank,
+.col-crl .cd-2-blank img,
+.col-crl .cd-2,
+.col-crl .cd-2 img{
+	width: 100%;
+}
+.col-crl .cd-2-blank .txt-box,
+.col-crl .cd-2 .txt-box{
+	margin: 22px 0 0;
+}
+.col-crl .new_products .cd-2 .txt-box .ttl span:after{
+	content: none;
+}
+.home-u-block .home-carousel__control{
+	margin: 25px 0 0 auto;
+}
+.future-map{
+	background: url(/img/index_bg_001.png) no-repeat center;
+}
+.allergy-care .cd-2{
+	box-shadow: none;
+}
+.allergy-care .cd-2 .txt-box{
+	background-color: #ffffffdd;
+	transform: translateY(-100%);
+}
+.learn .cd-2{
+	margin-top: 0;
+	box-shadow: 0px 3px 3px -3px #ccc;
+}
+
+@media only screen and (min-width: 768px) {
+	.wrap{
+		width: 100%;
+		margin: 0 7.39583%;
+	}
+	.home-news-notice {
+		padding: 25px 7.39583%;
+	}
+	.home-intro{
+		min-height: auto;
+	}
+	.home-intro-layout__news,
+	.home-intro-layout__info{
+		width: 50%;
+	}
+	.col-crl .col-1-box{
+		width: calc(50% - 18px);
+	}
+	.col-crl .home-gallery-card{
+		margin: 0 -16px;
+	}
+	.col-crl .home-gallery-card .slick-slide {
+		padding: 0 16px 5px;
+	}
+	.col-crl .campaign .home-gallery-card__item {
+    box-shadow: 0 5px 5px -5px rgba(0, 0, 0, .2);
+	}
+	.home-lineup{
+		margin-top: 0;
+		padding-top: 15px;
+	}
+	.future-map{
+		margin-top: 85px;
+		padding: 70px 0 60px;
+		background-size: auto 570px;
+	}
+	.allergy-care{
+		margin-top: 100px;
+	}
+	.future-map .col-1,
+	.allergy-care .col-1{
+		width: calc(100% - 60px);
+		max-width: 1620px;
+		margin: 0 auto;
+	}
+	.future-map .col-1 .col-1-box,
+	.allergy-care .col-1 .col-1-box{
+		margin-right: 0;
+	}
+	.future-map .col-1 .col-1-box:nth-child(2),
+	.allergy-care.col-1 .col-1-box:nth-child(2){
+		display: flex;
+		align-items: center;
+	}
+	.allergy-care .cd-2{
+		width: auto;
+	}
+	.allergy-care .cd-2 .txt-box{
+		margin: 0;
+		text-align: center;
+		padding: 20px 10px 10px;
+	}
+	.allergy-care .ld-1{
+		font-size: 4rem;
+	}
+	.allergy-care .tx-1{
+		font-size: 2rem;
+	}
+	.future-map .col-1 .bt-style{
+		width: 376px;
+	}
+	.allergy-care .col-1 .bt-style{
+		width: 276px;
+	}
+	.learn .col-1 .col-1-box:nth-of-type(1){
+		margin-right: 30px;
+	}
+	.learn .cd-2{
+		width: 492px;
+	}
+	.other-crl{
+		margin-top: 80px;
+	}
+	.other-crl .home-gallery-card .slick-slide {
+		padding: 0 5px 5px;
+		padding: 0 18px 5px;
+	}
+}
+
+@media only screen and (max-width:767.98px) {
+	.home-c-shoulderheadline.taL {
+		text-align: left;
+	}
+	.home-u-block .tab-2 .tab-box .tab {
+		padding: 0 5px 10px;
+		margin-right: 0;
+		flex: auto;
+		border-left: none !important;
+		border-right: none !important;
+		height: auto;
+		font-size: 1.3rem;
+	}
+	.home-intro{
+		padding-bottom: 0;
+	}
+	.home-intro:after{
+		content: none;
+	}
+	.future-map {
+		padding-bottom: 1.3em;
+    background-position: bottom;
+    background-size: 255% auto;
+	}
+	.future-map .col-1-box.col-1-box:nth-child(2) .im-1-img{
+		margin: 0 38px;
+		text-align: center;
+	}
+	.future-map .col-1-box.col-1-box:nth-child(2) .bt-style{
+		width: calc(100% - 30px);
+		margin: 0 15px 0;
+	}
+	.allergy-care{
+		margin: 0 4vw;
+	}
+	.allergy-care .col-1{
+		flex-wrap: wrap;
+		flex-direction: row;
+	}
+	.allergy-care .col-1-box.col-1-box:nth-child(1){
+		order: 2;
+		width: 47.8%;
+	}
+	.allergy-care .col-1-box.col-1-box:nth-child(2){
+		order: 1;
+		width: 100%;
+		margin-bottom: 0;
+	}
+	.allergy-care .col-1-box.col-1-box:nth-child(3){
+		order: 3;
+		width: 47.8%;
+	}
+	.allergy-care .cd-2{
+		width: 100%;
+	}
+	.allergy-care .cd-2 .ttl{
+		font-size: 1.4rem;
+	}
+	.allergy-care .cd-2 .txt-box{
+		text-align: left;
+		margin: 0 0 -6.5em;
+		padding: 1.1em 1.2em 0.2em;
+		border-radius: 1em;
+		height: 5.2em;
+	}
+	.allergy-care .im-1-img{
+		width: 96%;
+	}
+	.allergy-care .ld-1{
+		font-size: 2.3rem;
+	}
+	.allergy-care .tx-1{
+		font-size: 1.5rem;
+	}
+	.allergy-care-btn{
+		order: 4;
+		width: calc(100% - 30px);
+		margin: 0 15px;
+	}
+	.allergy-care-btn .bt-style{
+		margin: 50px auto 0;
+		width: 100%;
+		max-width: 350px;
+	}
+	.col-crl{
+		margin-bottom: 0!important;
+	}
+	.campaign{
+		margin-bottom: 2.2em;
+	}
+	.new_products{
+		margin-bottom: 0!important;
+	}
+	.new_products .home-gallery-card{
+		width: 100%;
+		padding: 0 4.3vw;
+	}
+	.new_products .home-gallery-card .slick-slide{
+			padding: 0 0 5px 4.4vw;
+	}
+	.campaign .slick-slide > div{
+		width: calc(100% - 4vw);
+	}
+	.new_products .slick-slide > div{
+		width: calc(100% - 4.2vw);
+	}
+	.home-lineup__headline {
+		margin: 0 0 25px;
+		padding-bottom: 0;
+	}
+	.learn .col-1{
+		flex-direction: row;
+	}
+	.learn .col-1 .col-1-box{
+		width: 47.8%;
+	}
+	.other-crl .home-gallery-card{
+		width: calc(50% - 2vw);
+	}
+}

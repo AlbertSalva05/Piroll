@@ -1,0 +1,285 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two-Column Responsive Layout</title>
+  <style>
+    .work-list {
+      display: flex;
+      gap: 20px;
+    }
+    .work-item {
+      position: relative;
+      width: 180px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .work-item img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .work-item .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: 0.3s ease;
+      border-radius: 8px;
+    }
+    .work-item:hover .overlay {
+      opacity: 1;
+    }
+
+    /* Modal background overlay */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* Modal content box */
+    .work__modal-content {
+      background: #fff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 920px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      animation: fadeZoom 0.3s ease;
+    }
+
+    /* Modal header */
+    .work__modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #ddd;
+      font-size: 20px;
+      font-weight: bold;
+      background: #f9f9f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #work_modal-ttl {
+      margin: 0;
+    }
+
+    .modal-close-x {
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #333;
+    }
+    .modal-close-x:hover {
+      color: #999;
+    }
+
+    /* Modal body */
+    .work__modal-body {
+      padding: 20px;
+    }
+
+    /* Two-column grid (50:50) */
+    .work__modal-grid {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      gap: 20px;
+    }
+
+    /* Left side (large image + thumbnails) */
+    .work__modal-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .main-image {
+      width: 100%;
+      max-height: 380px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .thumbs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .thumbs img {
+      width: 22%;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .thumbs img.active {
+      border: 2px solid #333;
+    }
+
+    /* Right subcontent */
+    .work__modal-right {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* Modal footer */
+    .work__modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid #ddd;
+      background: #f9f9f9;
+      text-align: right;
+    }
+
+    #work__modal-btn-close {
+      padding: 8px 16px;
+      border: none;
+      background: #333;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #work__modal-btn-close:hover {
+      background: #555;
+    }
+
+    /* Animation */
+    @keyframes fadeZoom {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="work-list">
+      <div class="work-item" data-id="1">
+        <div class="overlay">View Details</div>
+        <img src="images/work_img_product_001.jpg" alt="work 1">
+        <h3>work 1</h3>
+      </div>
+
+      <div class="work-item" data-id="2">
+        <div class="overlay">View Details</div>
+        <img src="images/work_img_product_002.jpg" alt="work 2">
+        <h3>work 2</h3>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="work__modal" class="modal">
+      <div class="work__modal-content">
+        <div class="work__modal-header">
+          <h2 id="work_modal-ttl"></h2>
+          <span class="modal-close-x" id="modal-close-x">&times;</span>
+        </div>
+        <div class="work__modal-body">
+          <!-- removed work__modal-desc -->
+          <div class="work__modal-grid">
+            <div class="work__modal-left">
+              <img id="main-image" class="main-image" src="" alt="Main Image">
+              <div class="thumbs" id="thumbs"></div>
+            </div>
+            <div class="work__modal-right" id="work__modal-thumb-desc"></div>
+          </div>
+        </div>
+        <div class="work__modal-footer">
+          <button id="work__modal-btn-close">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Sample JSON data
+  const works = [
+    {
+      id: 1,
+      title: "work 1",
+      images: [
+        "images/work_img_product_001.jpg",
+        "images/work_img_product_002.jpg",
+        "images/work_img_product_003.jpg",
+        "images/work_img_product_004.jpg"
+      ],
+      subcontent: "This is extra details for work 1 displayed on the right."
+    },
+    {
+      id: 2,
+      title: "work 2",
+      images: [
+        "images/work_img_product_002.jpg",
+        "images/work_img_product_003.jpg",
+        "images/work_img_product_004.jpg",
+        "images/work_img_product_005.jpg"
+      ],
+      subcontent: "This is extra details for work 2 displayed on the right."
+    }
+  ];
+
+  $(function(){
+    // Open modal
+    $(".work-item").click(function(){
+      const id = $(this).data("id");
+      const work = works.find(p => p.id == id);
+
+      if (work) {
+        $("#work_modal-ttl").text(work.title);
+        $("#work__modal-thumb-desc").text(work.subcontent);
+
+        // Set first image
+        $("#main-image").attr("src", work.images[0]);
+
+        // Populate thumbnails
+        $("#thumbs").empty();
+        $.each(work.images, function(i, img){
+          const $thumb = $("<img>").attr("src", img).attr("data-index", i);
+          if(i === 0) $thumb.addClass("active");
+          $("#thumbs").append($thumb);
+        });
+
+        // Thumbnail click
+        $("#thumbs img").click(function(){
+          $("#thumbs img").removeClass("active");
+          $(this).addClass("active");
+          $("#main-image").attr("src", $(this).attr("src"));
+          $("#work__modal-thumb-desc").text(work.subcontent + " (Image " + (parseInt($(this).data("index"))+1) + ")");
+        });
+
+        $("#work__modal").fadeIn(200).css("display","flex");
+      }
+    });
+
+    // Close modal
+    $("#work__modal-btn-close, #modal-close-x").click(function(){
+      $("#work__modal").fadeOut(200);
+    });
+  });
+</script>
+</body>
+</html>

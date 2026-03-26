@@ -1,0 +1,32 @@
+var VideogPlayerApp;
+
+VideogPlayerApp = VideogPlayerApp || {};
+
+VideogPlayerApp.helper = VideogPlayerApp.helper || {};
+
+/**
+ * option.btn_share.linkを設定する
+ * @param object option
+ * @return object
+ */
+VideogPlayerApp.helper.setShareLinkIfNeeded = function (option) {
+ if (!option || !option.btn_share || typeof(option.btn_share)!='object') {
+  //  console.log('notice : 6000 : option or option.btn_share is falsy');
+   return option;
+ }
+ var getCurrentURL = function(){
+   try {
+     return top.location.href || parent.location.href || document.referrer || location.href;
+   } catch (error) {
+     console.error(error);
+   }
+   return '';
+ }
+ var url = getCurrentURL();
+ if (!url) {
+   console.log('fail : 6001 :url is falsy');
+   return option;
+ }
+ option.btn_share.link = url;
+ return option;
+}

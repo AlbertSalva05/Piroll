@@ -1,0 +1,123 @@
+// *******************************
+// player event
+// *******************************
+window.addEventListener("DOMContentLoaded", function() {
+  var player = VideogPlayerApp.player;
+
+  // pauseイベントを発生させるかのフラグ。VideogPlaeyrのver1.6.6未満用の対応
+  var canPauseFlg = true;
+
+  player.on('ready', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'ready';
+    data.signature = 'videog_player_event';
+    setTimeout(function(){
+      dispatchVideogEventPostMessage(data);
+    }, 500);
+    // console.log('ready!!!!');
+  });
+
+  player.on('time', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'timeupdate';
+    // console.log(event);
+    data.value = event.position;
+    data.signature = 'videog_player_event';
+    dispatchVideogEventPostMessage(data);
+    // console.log('timeupdate!!!!');
+  });
+
+  player.on('contentplay', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'play';
+    data.signature = 'videog_player_event';
+    dispatchVideogEventPostMessage(data);
+    // console.log('play');
+  });
+
+  player.on('seek', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'seek';
+    data.signature = 'videog_player_event';
+    dispatchVideogEventPostMessage(data);
+    // console.log('seek');
+    canPauseFlg = false;
+    window.setTimeout(function () {
+      canPauseFlg = true;
+    }, 600);
+  });
+
+  player.on('pause', function(event){
+    window.setTimeout(function () {
+      if (!canPauseFlg) {
+        canPauseFlg = true;
+        return;
+      }
+      var data = _.cloneDeep(analyticsData);
+      data.name = 'pause';
+      data.signature = 'videog_player_event';
+      dispatchVideogEventPostMessage(data);
+      // console.log('pause');
+    }, 300);
+  });
+
+  player.on('complete', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'complete';
+    data.signature = 'videog_player_event';
+    dispatchVideogEventPostMessage(data);
+    // console.log('complete!!!!');
+  });
+
+  player.on('adPlay', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'adplay';
+    data.signature = 'videog_player_event';
+    dispatchVideogEventPostMessage(data);
+    // console.log('adplay');
+  });
+
+  player.on('adPause', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'adpause';
+    data.signature = 'videog_player_event';
+    dispatchVideogEventPostMessage(data);
+    // console.log('adpause');
+  });
+
+  player.on('adSkipped', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'adskipped';
+    data.signature = 'videog_player_event';
+    dispatchVideogEventPostMessage(data);
+    // console.log('adskipped');
+  });
+
+  player.on('adComplete', function(event){
+    var data = _.cloneDeep(analyticsData);
+    data.name = 'adcomplete';
+    data.signature = 'videog_player_event';
+    dispatchVideogEventPostMessage(data);
+    // console.log('adcomplete');
+  });
+
+  function dispatchVideogEventPostMessage(data){
+    // 現在のプレイリストアイテムを取得してhash2を取得
+    if(typeof(data) !== "object"){
+      return;
+    }
+    var target = window.parent;
+    if(!target || (typeof(target.postMessage) !== "function" && typeof(target.postMessage) !== "object")){
+      return;
+    }
+
+    var arr_data = [];
+    for(var x in data){
+      arr_data.push(x+'='+encodeURIComponent(data[x]));
+    }
+    try{
+      target.postMessage(arr_data.join('&'), '*');
+    }catch(ex){}
+  };
+}, false);
+

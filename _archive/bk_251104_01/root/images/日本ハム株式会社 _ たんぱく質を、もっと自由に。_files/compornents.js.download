@@ -1,0 +1,55 @@
+$(function(){
+  $('.js-open').on('click',function(){
+    $('#overlay, .modal-window').fadeIn();
+    let getImg = $(this).html();
+
+    $('.modal-img-box').prepend(getImg);
+  });
+
+  $('.js-close, #overlay').click(function(){
+    $('#overlay, .modal-window').fadeOut();
+    setTimeout(function(){$('.modal-img-box').empty();},500);
+  });
+
+  $('.acc-1, .faq-1').on('click',function(){
+    $(this).toggleClass('active');
+    $(this).next('.acc-cont').slideToggle();
+  });
+
+  $('.tab-box .tab').on('click',function(){
+    let tabBox = $(this).parent();
+    let tabNum = $(this).index();
+
+    tabBox.children('.tab').removeClass('on');
+    tabBox.children('.tab').eq(tabNum).addClass('on');
+    tabBox.next('.tab-cont-box').children('.tab-cont').removeClass('on');
+    tabBox.next('.tab-cont-box').children('.tab-cont').eq(tabNum).addClass('on');
+  });
+
+  $('.tip-1').mouseover(function(){
+    $(this).children('.tip-1 .tip-txt').css('display','inline-block');
+  }).mouseout(function(){
+    $(this).children('.tip-1 .tip-txt').css('display','none');
+  });
+
+  $('.pld-1 select, .pld-1-02 select').mouseover(function(){
+    $(this).prev().css('color','#e30934');
+    $(this).parent().next('.ico-rss').css('text-decoration','underline');
+  }).mouseout(function(){
+    $(this).prev().css('color','#333');
+    $(this).parent().next('.ico-rss').css('text-decoration','none');
+  });
+
+  $('.mod_class_name').click(function(){
+    let clickUrl = $(this).parents('.mod_ttl, .mod_flex').nextAll('.mod_style').html();
+
+    navigator.clipboard.writeText(clickUrl);
+    $('.success_msg').fadeIn('slow', function(){
+      $(this).delay(800).fadeOut('slow');
+    });
+  });
+
+  $('.select-link-list').on('change',function(){
+    window.location.href = $('option:selected').val();
+  });
+});

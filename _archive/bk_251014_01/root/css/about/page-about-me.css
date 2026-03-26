@@ -1,0 +1,140 @@
+@charset "utf-8";
+
+
+/* hero__area */
+.hero__area {
+    display: flex;
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    padding-top: 150px;
+    text-align: center;
+}
+.hero__bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    background-position: 50% 50%;
+    background-size: cover;
+}
+.hero__bg > div {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-position: 50% 50%;
+    background-size: cover;
+}
+.hero__bg__img {
+	background-image: url("/images/about/page-about-me/about_img_001.png");
+	background-position: 50% 35% !important;
+	transform: translateY(0px) translateZ(0px);
+}
+.hero__bg__img--overlay {
+	background-color: rgba(12, 12, 12, 0.6);
+}
+.hero__name {
+	font-size: 2.5rem;
+}
+.hero__txt {
+    width: 100%;
+    padding: 80px 0;
+    flex: 1;
+}
+
+
+@media print, screen and (min-width: 768px) {
+	.hero__desc {
+        padding: 50px 0;
+        font-size: 1.25rem;
+    }
+}
+
+/* SP STYLES */
+@media screen and (max-width: 767px) {
+	.hero__desc {
+        padding: 30px 10px;
+        font-size: 1rem;
+    }
+}
+
+/* about__area */
+.about__area p img {
+	width: auto;
+}
+.about__area .col-2-1 {
+    display: flex;
+    margin: 0 auto;
+    align-items: stretch;
+    gap: 2rem;
+}
+.about__area .col-2-1 .col__img {
+    display: flex;
+    overflow: hidden;
+}
+.about__area .col-2-1 .col__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.05);
+    transition: transform 0.5s ease;
+}
+.about__area .col-2-1 .col__img img:hover {
+    transform: scale(1.12);
+}
+.about__area .col-2-1 .col__txt {
+    display: flex;
+    text-align: left;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media print, screen and (min-width: 768px) {
+	.about__area .col-2-1 > .col__txt {
+		padding: 150px 20px;
+	}
+    .about__area .col-2-1 .col__img {
+        flex: 0 0 50%;
+    }
+}
+
+/* SP STYLES */
+@media screen and (max-width: 767px) {
+	.about__img-sign {
+		margin-top: 40px;
+	}
+    .about__area .col-2-1 {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* TABLET STYLES */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+
+}
+
+/* DESKTOP STYLES */
+@media print, screen and (min-width: 1024px) {
+
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1399px) {
+
+}
+
+/* PC STYLES */
+@media only screen and (min-width: 1400px) and (max-width: 1600px) {
+
+}
+
+
+/* SP STYLES */
+@media screen and (max-width: 767px) {
+
+}

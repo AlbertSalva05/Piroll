@@ -1,0 +1,126 @@
+@charset "utf-8";
+
+.portfolio {
+	margin-bottom: 100px;
+	background: var(--bg-gray);
+}
+.portfolio__list {
+	display: flex;
+	flex-wrap: wrap;
+}
+.portfolio__list .portfolio__list-item {
+	position: relative;
+	/* width: calc(100% / 3); */
+	width: 25%;
+    overflow: hidden;
+}
+.portfolio__list .portfolio__list-item a {
+    display: block;
+}
+.button {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	box-shadow: none;
+	outline: none;
+}
+.portfolio__list-filter-group {
+    padding: 34px 17px;
+    text-align: center;
+}
+.portfolio__list-filter-group > button.is-checked,
+.portfolio__list-filter-group > button:hover {
+    opacity: 1;
+}
+.portfolio__list-filter-group button {
+	display: inline-block;
+    padding: 5px 15px;
+    color: #000;
+    font-size: .85rem;
+    font-weight: 500;
+    opacity: .5;
+    text-transform: uppercase;
+    transition: .2s opacity;
+}
+.portfolio__list .portfolio__list-item.hidden {
+    display: none;
+}
+.portfolio__list-item {
+	position: relative;
+	overflow: hidden;
+}
+.portfolio__list-image {
+	display: block;
+	position: relative;
+    width: 100%;
+	height: 100%;
+    padding-bottom: 100%;
+    background-position: 50% 50%;
+    background-size: cover;
+}
+.portfolio__list-bg-image {
+	position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+	width: 100%;
+	height: 100%;
+    background-position: 50% 50%;
+    background-size: cover;
+}
+.portfolio__list__trigger {
+	background-color: #f5f5f5;
+	text-align: var(--text-center);
+}
+.portfolio__list__trigger__link {
+	color: #8e8e8e;
+	letter-spacing: 2px;
+}
+.portfolio__list__trigger__link:hover {
+	opacity: 0.75;
+}
+
+.portfolio__overlay.overlay-primary {
+	background: rgba(16, 201, 195, 0.8);
+}
+.portfolio__overlay.content-bottom {
+	align-items: flex-end;
+}
+.portfolio__overlay.content-top {
+	align-items: flex-start;
+}
+
+.portfolio__overlay.content-bottom .portfolio__overlay-content{
+	padding: 30px 50px;
+}
+.portfolio__overlay.content-top .portfolio__overlay-content {
+    padding: 30px 50px;
+}
+
+@media print, screen and (min-width: 768px) {
+	.portfolio__list__trigger__link {
+		display: block;
+		padding: 46px 0;
+		font-size: 12px;
+	}
+}
+
+/* SP STYLES */
+@media screen and (max-width: 767px) {
+	.portfolio__list__trigger {
+		padding: 24px 0;
+		font-size: 14px;
+	}
+	.portfolio__list li {
+        display: flex;
+        width: calc(100%);
+        align-items: center;
+        flex-direction: column;
+    }
+	.portfolio__list .portfolio__list-item {
+		position: relative;
+		width: 100%;
+		overflow: hidden;
+	}
+}

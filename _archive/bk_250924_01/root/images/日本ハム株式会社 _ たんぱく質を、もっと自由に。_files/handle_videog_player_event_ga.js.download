@@ -1,0 +1,248 @@
+(function(){
+  /**
+   * Handle VideogPlayer event for google analytics.
+   * Dependent : ga
+   */
+
+  var firstPlayFlag = false;
+  var endedFlag = false;
+
+  var adFirstPlayFlag = false;
+
+  /**
+   * メンバー用のga初期実行
+   * @param {object} data
+   * @return {void}
+   */
+  function gaInitExecuteMember(data) {
+    // 検証
+    if (!data || !data.traking_id) {
+      console.log('no member ga');
+      return;
+    }
+    // createを実行
+    ga('create', data.traking_id, 'auto', 'clientTracker');
+
+    // dimensionの登録
+    Object.keys(data.dimensions).forEach(function (key) {
+      var dmns = data.dimensions[key];
+      ga('clientTracker.set', 'dimension' + dmns.dimension_no, dmns.value);
+    });
+
+    // pageview
+    ga('clientTracker.send', 'pageview');
+  }
+
+    /**
+   * メンバー用のga4(gtag)初期実行
+   * @param {object} data
+   * @return {void}
+   */
+    function ga4InitExecuteMember(data) {
+      // 検証
+      if (!data || !data.ga4_traking_id) {
+        console.log('no member ga');
+
+        return;
+      }
+      // createを実行
+      gtag('config', data.ga4_traking_id); // 社内検証用GA4タグ
+   
+    }
+  
+  /**
+   * LD用のga初期実行
+   * @param {object} data
+   * @return {void}
+   */
+  function gaInitExecuteLD(data) {
+    if (!data || !data.traking_id) {
+      console.log('no ld ga');
+      return;
+    }
+    // createを実行
+    ga('create', data.traking_id, 'auto');
+
+    // dimensionの登録
+    Object.keys(data.dimensions).forEach(function (key) {
+      var dmns = data.dimensions[key];
+      var dmns2 = 'dimension' + dmns.dimension_no;
+      ga('set', 'dimension' + dmns.dimension_no, dmns.value);
+    });
+
+    // pageview
+    ga('send', 'pageview');
+  }
+  
+  /**
+   * LD用のga4初期実行
+   * @param {object} data
+   * @return {void}
+   */
+  function ga4InitExecuteLD(data) {
+    if (!data || !data.traking_id) {
+      console.log('no ld ga');
+      return;
+    }
+    // createを実行
+    gtag('config', 'G-W9E20L0FSQ'); 
+
+  }
+
+  /**
+   * ga初期実行
+   * @param {object} data
+   * @return {void}
+   */
+  function gaInitExecute(data) {
+    var traking_select = data.member.traking_id;
+    var ga4_traking_select = data.member.ga4_traking_id;
+    gaInitExecuteLD(data.LD);
+    ga4InitExecuteLD(data.LD);
+    if(!!traking_select){
+      gaInitExecuteMember(data.member);
+    }
+    if(!!ga4_traking_select){
+      ga4InitExecuteMember(data.member); 
+    }
+  }
+
+  /**
+   * gaイベント実行
+   * @param {string} eventName
+   * @param {object} data
+   * @return {void}
+   */
+  function dispatchGaEvent(eventName, data) {
+    if (!data) {
+      return;
+    }
+    var movieTitle = (!data.common || !data.common.movie_title) ? null : data.common.movie_title;
+    if (data.LD) {
+      console.log("LDイベント");
+      console.log(data);
+      ga('send', 'event', 'videog_player', eventName, movieTitle);
+      gtag('event', eventName, {
+        'send_to' : 'G-W9E20L0FSQ',
+				'event_category': 'videog_player',
+				'event_label': movieTitle
+			  });
+
+    }
+    if (data.member) {
+      console.log("gaイベント");
+      console.log(data.member.traking_id);
+      console.log(data.member.ga4_traking_id);
+      ga('clientTracker.send', 'event', 'videog_player', eventName, movieTitle);
+      gtag('event', eventName, {
+        'send_to' : data.member.ga4_traking_id,
+        'debug_mode' : true,
+				'event_category': 'videog_player',
+				'event_label': movieTitle
+			  });
+
+    }
+  }
+
+  /**
+   * ファイルの読み込み終了後に実行する処理の登録
+   *  gaの作成とdimensionの登録とpageviewの送信
+   */
+  window.addEventListener("load", function(event) {
+    if(
+      typeof(VideogPlayerApp) !== 'object'
+      || typeof(VideogPlayerApp.gaData) !== 'object'
+    ){
+      console.error("VideogPlayerMaker: failed undifined gaData.");
+      return;
+    }
+    gaInitExecute(VideogPlayerApp.gaData);
+  });
+
+
+  /**
+   * ファイルの読み込み終了後に実行する処理の登録LIST_FIN_W4
+   *  プレイヤーイベントから、gaを叩く処理の登録
+   */
+  window.addEventListener("load", function(event) {
+    if(
+      typeof(VideogPlayerApp) !== 'object'
+      || typeof(VideogPlayerApp.player) !== 'object'
+      || typeof(VideogPlayerApp.gaData) !== 'object'
+    ){
+      console.error("VideogPlayerMaker: failed undifined player.");
+      return;
+    }
+
+    var player = VideogPlayerApp.player;
+    var gaData = VideogPlayerApp.gaData;
+
+    // 何でもかんでも再生した時のイベントフック
+    // FIXME: innerplayerは公開していないのでよろしく無い
+    player.innerplayer.on('play', function(event){
+      // console.log('innerplayer play');
+      // 初回playはフラグを立てて終了
+      if (firstPlayFlag === false) {
+        firstPlayFlag = true;
+        return;
+      }
+
+      // 再生完了して無い場合（pauseからの復帰、seek時）は終了。
+      if (endedFlag === false) {
+        return;
+      }
+
+      // replayイベントをgaに送信、完了フラグ切り替え
+      console.log('replay');
+      dispatchGaEvent('replay', gaData);
+      endedFlag = false;
+      return;
+    });
+
+    // 何でもかんでも完了した時のイベントフック
+    // FIXME: innerplayerは公開していないのでよろしく無い
+    player.innerplayer.on('ended', function(event){
+      endedFlag = true;
+    });
+    player.on('contentplay', function(event){
+      dispatchGaEvent('play', gaData);
+      console.log('contentplay');
+      console.log('15');
+
+    });
+    // FIXME:contentendedは、1.4.9以降使用しない。削除予定
+    //    バージョンアップの移行の為に残しておく
+    player.on('contentended', function(event){
+      dispatchGaEvent('complete', gaData);
+      console.log('contentended');
+    });
+    player.on('complete', function(event){
+      dispatchGaEvent('complete', gaData);
+      console.log('complete');
+    });
+    player.on('adPlay', function(event){
+      if (adFirstPlayFlag === true) {
+        return;
+      }
+
+      dispatchGaEvent('adPlay', gaData);
+      console.log('adPlay');
+      adFirstPlayFlag = true;
+
+    });
+    player.on('adClick', function(event){
+      dispatchGaEvent('adClick', gaData);
+      console.log('adClick');
+    });
+    player.on('adSkipped', function(event){
+      dispatchGaEvent('adSkipped', gaData);
+      console.log('adSkipped');
+      adFirstPlayFlag = false;
+    });
+    player.on('adComplete', function(event){
+      dispatchGaEvent('adComplete', gaData);
+      console.log('adComplete');
+      adFirstPlayFlag = false;
+    });
+  });
+})();

@@ -1,0 +1,274 @@
+const works = [
+  {
+    id: 1,
+    title: "Business Card Design – Classic",
+    images: [
+      "images/work_img_product_001.jpg",
+      "images/work_img_product_002.jpg",
+      "images/work_img_product_003.jpg",
+      "images/work_img_product_004.jpg"
+    ],
+    description:
+      "A timeless business card layout that blends simplicity with sophistication.\n" +
+      "Its balanced use of white space and elegant typography communicates trust.\n" +
+      "Perfectly suited for corporate professionals and traditional brands.\n\n" +
+      "The design focuses on long-lasting appeal, rather than trends.\n" +
+      "High-quality matte stock ensures a premium tactile experience.\n\n" +
+      "Ideal for networking, client meetings, and first impressions that last."
+  },
+  {
+    id: 2,
+    title: "Mobile App UI – E-Commerce",
+    images: [
+      "images/work_img_product_002.jpg",
+      "images/work_img_product_003.jpg",
+      "images/work_img_product_004.jpg",
+      "images/work_img_product_005.jpg"
+    ],
+    description:
+      "A complete UI design tailored for e-commerce apps with intuitive flows.\n" +
+      "Every screen is optimized for mobile shopping behavior and usability.\n" +
+      "From product browsing to checkout, every tap is seamless.\n\n" +
+      "The color scheme and icons enhance clarity and visual hierarchy.\n" +
+      "Typography ensures legibility even on smaller devices.\n\n" +
+      "Ideal for startups or established brands launching mobile storefronts."
+  },
+  {
+    id: 3,
+    title: "Shopping Bag Design – Minimal",
+    images: [
+      "images/work_img_product_003.jpg",
+      "images/work_img_product_004.jpg",
+      "images/work_img_product_005.jpg",
+      "images/work_img_product_006.jpg"
+    ],
+    description:
+      "A sustainable shopping bag design that promotes brand identity subtly.\n" +
+      "Minimal lines and monochrome printing reduce environmental impact.\n" +
+      "It’s clean, stylish, and instantly recognizable.\n\n" +
+      "Made with recycled kraft paper or organic fibers.\n" +
+      "The structural integrity supports heavier products without tearing.\n\n" +
+      "Perfect for lifestyle, fashion, and wellness-oriented retail brands."
+  },
+  {
+    id: 4,
+    title: "Luxury Gift Box – Premium Edition",
+    images: [
+      "images/work_img_product_004.jpg",
+      "images/work_img_product_005.jpg",
+      "images/work_img_product_006.jpg",
+      "images/work_img_product_007.jpg"
+    ],
+    description:
+      "An opulent gift box designed to elevate the unboxing experience.\n" +
+      "Rich materials like velvet-lined interiors and magnetic flaps.\n" +
+      "Gives a feeling of exclusivity and elegance.\n\n" +
+      "Foil-stamped logos and embossed patterns add luxury cues.\n" +
+      "Perfectly engineered to hold high-value items securely.\n\n" +
+      "A great choice for luxury brands, jewelry, or special edition items."
+  },
+  {
+    id: 5,
+    title: "Glass Bottle Label – Sparkling Water",
+    images: [
+      "images/work_img_product_005.jpg",
+      "images/work_img_product_006.jpg",
+      "images/work_img_product_007.jpg",
+      "images/work_img_product_008.jpg"
+    ],
+    description:
+      "A crystal-clear label design that reflects the purity of sparkling water.\n" +
+      "Combines soft gradients and minimalist fonts for a fresh look.\n" +
+      "The design communicates hydration and health.\n\n" +
+      "Uses waterproof adhesive to withstand cold storage.\n" +
+      "Transparent sections allow product visibility and premium feel.\n\n" +
+      "Perfect for boutique beverage companies and artisan water brands."
+  },
+  {
+    id: 6,
+    title: "Honey Jar Packaging – Organic Wildflower",
+    images: [
+      "images/work_img_product_006.jpg",
+      "images/work_img_product_007.jpg",
+      "images/work_img_product_008.jpg",
+      "images/work_img_product_009.jpg"
+    ],
+    description:
+      "A rustic label design celebrating the natural origins of organic honey.\n" +
+      "Features hand-drawn florals and vintage typography.\n" +
+      "It captures the charm of rural beekeeping traditions.\n\n" +
+      "Earth-toned colors emphasize purity and natural ingredients.\n" +
+      "Craft paper labels give it a handmade, artisanal feel.\n\n" +
+      "Perfect for farm-to-table, organic, or local food product lines."
+  },
+  {
+    id: 7,
+    title: "Cosmetic Bottle Design – Skincare Lotion",
+    images: [
+      "images/work_img_product_007.jpg",
+      "images/work_img_product_008.jpg",
+      "images/work_img_product_009.jpg",
+      "images/work_img_product_010.jpg"
+    ],
+    description:
+      "A sleek bottle design tailored for modern skincare lotion packaging.\n" +
+      "Soft pastel hues and rounded edges create a calming aesthetic.\n" +
+      "Ideal for beauty-focused and wellness brands.\n\n" +
+      "The label balances elegance with ingredient transparency.\n" +
+      "High-grade materials ensure safe preservation of the product.\n\n" +
+      "Well-suited for premium, natural, or vegan cosmetic lines."
+  },
+  {
+    id: 8,
+    title: "Business Card Design – Modern Edge",
+    images: [
+      "images/work_img_product_008.jpg",
+      "images/work_img_product_001.jpg",
+      "images/work_img_product_002.jpg",
+      "images/work_img_product_003.jpg"
+    ],
+    description:
+      "A bold and geometric business card designed to stand out.\n" +
+      "Sharp lines, vibrant contrasts, and unique layouts.\n" +
+      "Ideal for creatives, designers, and digital agencies.\n\n" +
+      "It reflects innovation, energy, and originality.\n" +
+      "Printed on thick, textured card stock for extra impact.\n\n" +
+      "A perfect way to communicate brand personality in one glance."
+  },
+  {
+    id: 9,
+    title: "Mobile App UI – Finance Tracker",
+    images: [
+      "images/work_img_product_009.jpg",
+      "images/work_img_product_010.jpg",
+      "images/work_img_product_011.jpg",
+      "images/work_img_product_012.jpg"
+    ],
+    description:
+      "A clean mobile interface designed to help users manage finances.\n" +
+      "Includes dashboards for expenses, income, and savings goals.\n" +
+      "Charts and icons make data easy to understand.\n\n" +
+      "Color coding supports quick decision-making and clarity.\n" +
+      "Typography is optimized for legibility on all screen sizes.\n\n" +
+      "Perfect for fintech startups or personal finance apps."
+  },
+  {
+    id: 10,
+    title: "Shopping Bag Design – Eco Friendly",
+    images: [
+      "images/work_img_product_010.jpg",
+      "images/work_img_product_011.jpg",
+      "images/work_img_product_012.jpg",
+      "images/work_img_product_013.jpg"
+    ],
+    description:
+      "An eco-friendly bag made from 100% biodegradable materials.\n" +
+      "Bold yet minimal branding communicates environmental values.\n" +
+      "Stylish enough for fashion-forward consumers.\n\n" +
+      "Durable handles and reinforced seams add strength.\n" +
+      "Silkscreen printing ensures vibrant yet sustainable visuals.\n\n" +
+      "Great for ethical brands, eco-retailers, and green campaigns."
+  },
+  {
+    id: 11,
+    title: "Luxury Gift Box – Black & Gold",
+    images: [
+      "images/work_img_product_011.jpg",
+      "images/work_img_product_012.jpg",
+      "images/work_img_product_013.jpg",
+      "images/work_img_product_014.jpg"
+    ],
+    description:
+      "A high-end gift box designed with bold contrast and elegance.\n" +
+      "Black matte finish paired with metallic gold accents.\n" +
+      "Creates an unforgettable unboxing moment.\n\n" +
+      "Ideal for jewelry, watches, and premium cosmetics.\n" +
+      "Custom-cut foam interiors keep items secure and pristine.\n\n" +
+      "Designed to enhance brand luxury and exclusivity."
+  },
+  {
+    id: 12,
+    title: "Glass Bottle Label – Artisan Soda",
+    images: [
+      "images/work_img_product_012.jpg",
+      "images/work_img_product_013.jpg",
+      "images/work_img_product_014.jpg",
+      "images/work_img_product_015.jpg"
+    ],
+    description:
+      "A colorful label for craft sodas with fun, playful graphics.\n" +
+      "Combines retro inspiration with modern typography.\n" +
+      "Each flavor has its own character and charm.\n\n" +
+      "Perfect for small-batch beverage makers and local brewers.\n" +
+      "Printed with eco-friendly inks on textured label stock.\n\n" +
+      "Designed to be collectible and highly shareable on social media."
+  },
+  {
+    id: 13,
+    title: "Honey Jar Packaging – Premium Reserve",
+    images: [
+      "images/work_img_product_013.jpg",
+      "images/work_img_product_014.jpg",
+      "images/work_img_product_015.jpg",
+      "images/work_img_product_016.jpg"
+    ],
+    description:
+      "Premium honey packaging that radiates luxury and heritage.\n" +
+      "Uses foil embossing, wax seals, and glass clarity.\n" +
+      "Targets gourmet and high-end culinary markets.\n\n" +
+      "Label storytelling communicates origin and flavor notes.\n" +
+      "Packaging doubles as a decorative piece for the kitchen.\n\n" +
+      "Perfect for gift baskets, specialty shops, and export goods."
+  },
+  {
+    id: 14,
+    title: "Cosmetic Bottle Design – Hair Serum",
+    images: [
+      "images/work_img_product_014.jpg",
+      "images/work_img_product_015.jpg",
+      "images/work_img_product_016.jpg",
+      "images/work_img_product_001.jpg"
+    ],
+    description:
+      "A refined bottle design focused on hair care and styling products.\n" +
+      "The elongated shape and glass dropper add elegance.\n" +
+      "Perfect for serums, oils, and leave-in treatments.\n\n" +
+      "The label showcases key ingredients and brand identity.\n" +
+      "Materials are resistant to moisture and oil exposure.\n\n" +
+      "Designed for upscale beauty lines and salon-quality products."
+  },
+  {
+    id: 15,
+    title: "Business Card Design – Creative Agency",
+    images: [
+      "images/work_img_product_015.jpg",
+      "images/work_img_product_016.jpg",
+      "images/work_img_product_001.jpg",
+      "images/work_img_product_002.jpg"
+    ],
+    description:
+      "A playful business card concept with unconventional layout and color.\n" +
+      "Ideal for marketing firms, studios, and freelance creatives.\n" +
+      "The design reflects energy, movement, and originality.\n\n" +
+      "Includes custom icons, bold type, and layered textures.\n" +
+      "Printed using spot UV and textured finishes.\n\n" +
+      "Built to spark conversations and leave lasting impressions."
+  },
+  {
+    id: 16,
+    title: "Mobile App UI – Social Media",
+    images: [
+      "images/work_img_product_016.jpg",
+      "images/work_img_product_001.jpg",
+      "images/work_img_product_002.jpg",
+      "images/work_img_product_003.jpg"
+    ],
+    description:
+      "A vibrant UI concept for next-generation social platforms.\n" +
+      "Focuses on user interaction, engagement, and community.\n" +
+      "Features stories, chat, reactions, and feed modules.\n\n" +
+      "Color palettes evoke emotion and digital energy.\n" +
+      "Micro-animations add delight and responsiveness.\n\n" +
+      "Ideal for startups building social, creative, or lifestyle apps."
+  }
+];
