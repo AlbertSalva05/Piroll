@@ -27,7 +27,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/component.css">
 	<link rel="stylesheet" type="text/css" href="/css/common.css">
 	<link rel="stylesheet" type="text/css" href="/css/work/work-single-common.css">
-
+	<link rel="stylesheet" type="text/css" href="/css/work/work-single-7.css">
 </head>
 <body>
 	<!-- Google Tag Manager (noscript) -->
@@ -37,10 +37,9 @@
 	<main class="main work-single-page">
 
 		<!-- start of header block -->
-		<header class="header bg-white disabled-fixed-header">
+		<header class="header relative bg-white">
 			<div class="wrap">
-				<div class="header__area">
-					<p class="header__logo"><img src="/images/logo.png" alt=""></p>
+				<div class="header__area header__centered">
 					<div class="header__menu__nav">
 						<a href="javascript:void(0);" class="menuBtn sp-only"><img src="/images/icon-menu.svg" alt=""></a>
 						<div class="header__menu__bar">
@@ -124,6 +123,15 @@
 										</li>
 									</ul>
 								</li>
+							</ul>
+						</div>
+					</div>
+					<p class="header__logo w-32"><img src="/images/logo.png" alt=""></p>
+					<div class="header__menu__nav">
+						<a href="javascript:void(0);" class="menuBtn sp-only"><img src="/images/icon-menu.svg" alt=""></a>
+						<div class="header__menu__bar">
+							<a href="javascript:void(0);" class="closeBtn sp-only"><img src="/images/icon-menu-close.svg" alt=""></a>
+							<ul class="header__menu__list">
 								<li class="header__menu__list-item">
 									<a href="#">Blog</a>
 									<ul class="header__menu__list-dropdown">
@@ -146,101 +154,47 @@
 		</header>
 		<!-- end of header block -->
 
-		<!-- start of project block -->
-		<section class="project project--alt">
-			<!-- start of project__slide block -->
-			<div class="project__slider">
-				<div class="project__slider__area text-center">
-					<div class="project__slider__testimony_area slick-box-type">
-						<div class="slide">
-							<div class="content__area">
-								<div class="project__hero">
-									<img src="/images/work/single/5/portfolio-single-5-1.jpg" alt="" loading="lazy">
-								</div>
-							</div>
-						</div>
-						<div class="slide">
-							<div class="content__area">
-								<div class="project__hero">
-									<img src="/images/work/single/5/portfolio-single-5-2.jpg" alt="" loading="lazy">
-								</div>
-							</div>
-						</div>
-						<div class="slide">
-							<div class="content__area">
-								<div class="project__hero">
-									<img src="/images/work/single/5/portfolio-single-5-3.jpg" alt="" loading="lazy">
-								</div>
-							</div>
-						</div>
+		<!-- start of hero block -->
+		<div class="hero bg-gray">
+			<div class="wrap no-wrap sp-no-wrap">
+				<div class="hero__area centered">
+					<div class="hero__bg">
+						<div class="hero__bg__img"></div>
+						<div class="hero__bg__img--overlay bg-gray"></div>
 					</div>
-				</div>
-			</div>
-			<!-- end of project__slide block -->
-
-			<div class="wrap">
-				<div class="project__hero-text">
-					<h2 class="project__title">Light Interior</h2>
-					<div class="project__intro">
-						<div class="project__intro-main">
-							<p class="project__desc">Them first created in creepeth don't whose waters saying. Years whose yielding which so behold lights tree he signs.
-							Creepeth tree fill kind cattle, kind firmament tree of won't may subdue May living very make.</p>
-							<p class="project__desc">Had sixth together dominion seed whales have god him him Called morning firmament darkness there land forth without multiply.</p>
-						</div>
-						<div class="project__intro-meta">
-							<dl class="project__meta">
-								<div class="project__meta-row">
-									<dt>Client</dt>
-									<dd>Emma Morris</dd>
-								</div>
-								<div class="project__meta-row">
-									<dt>Date</dt>
-									<dd>06.20.2017</dd>
-								</div>
-								<div class="project__meta-row">
-									<dt>Share</dt>
-									<dd>Facebook, Twitter, Pinterest</dd>
-								</div>
-							</dl>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- end of project block -->
-
-		</section>
-
-		<!-- start of testimonials block -->
-		<div class="testimonials bg-secondary">
-			<div class="wrap">
-				<div class="testimonials__area text-center">
-					<div class="slider__testimony_area">
-						<div class="slide">
-							<div class="content__area">
-								<p class="content__quote fs-24 ff-montserrat u-mb-18 quoted-text">Outstanding job and exceeded all expectations. It was a pleasure<br class="pc-only"> to work with them on a sizable first project and am looking<br class="pc-only"> forward to start the next one asap.</p>
-								<p class="content__author fs-14 ff-montserrat tf-uppercase">Michael Hopkins</p>
-							</div>
-						</div>
+					<div class="hero__txt">
+						<h1 class="hero__name" data-aos="fade-left" data-aos-offset="100">Minimal Architecture</h1>
+						<p class="hero__desc u-mb-0 u-pb-0 fs-15" data-aos="fade-left" data-aos-offset="100">Said every itself them, good there made third greater fill seasons deep. The Us winged evening you're signs<br> great him to fourth. One. Their female called them unto creeping them firmament. Light fowl don't days.</p>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- end of testimonials block -->
+		<!-- end of hero block -->
+
+		<!-- IMAGE GRID -->
+		<div class="project__gallery u-pb-0 u-prl-30 bg-gray">
+			<ul class="project__gallery-list">
+				<li class="full-width-list-item"><img src="/images/work/single/7/portfolio-single-7-1.jpg" alt="" loading="lazy"></li>
+				<li class="full-width-list-item"><img src="/images/work/single/7/portfolio-single-7-2.jpg" alt="" loading="lazy"></li>
+				<li class="full-width-list-item"><img src="/images/work/single/7/portfolio-single-7-3.jpg" alt="" loading="lazy"></li>
+			</ul>
+		</div>
+		<!-- end of IMAGE GRID block -->
 
 		<!-- start of pagination NAV -->
 		<nav class="project__nav" aria-label="Project navigation">
 			<div class="wrap">
 				<div class="project__nav-list" aria-label="Project navigation">
-					<a href="/work/work-single-4.html" class="project__nav-list-item project__nav-list-prev">
+					<a href="/work/single/work-single-3.html" class="project__nav-list-item project__nav-list-prev">
 						<span class="project__nav-list-arrow">&#x2039;</span>
 						<span class="project__nav-list-text">Previous Project</span>
 					</a>
-					<a href="/work/work-3-style-1.html" class="project__nav-list-item project__nav-list-grid">
+					<a href="/work/3/work-3-style-1.html" class="project__nav-list-item project__nav-list-grid">
 						<span class="project__nav-list-grid-icon">
 							<span></span><span></span><span></span><span></span>
 						</span>
 					</a>
-					<a href="/work/work-single-6.html" class="project__nav-list-item project__nav-list-next">
+					<a href="/work/single/work-single-5.html" class="project__nav-list-item project__nav-list-next">
 						<span class="project__nav-list-text">Next Project</span>
 						<span class="project__nav-list-arrow">&#x203a;</span>
 					</a>
@@ -250,7 +204,7 @@
 		<!-- end of pagination NAV -->
 
 		<!-- start of footer block -->
-		<footer class="footer">
+		<footer class="footer bg-dark-gray-4">
 			<div class="wrap">
 				<div class="footer__area">
 					<ul class="footer__list">

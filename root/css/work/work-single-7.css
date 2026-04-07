@@ -1,0 +1,11 @@
+@charset "utf-8";
+
+/* ================================
+	BASE
+================================ */
+.hero__bg__img {
+    background-image: none;
+    background-position: 50% 35% !important;
+    transform: translateY(0px) translateZ(0px);
+    background: var(--clr-neutral);
+}

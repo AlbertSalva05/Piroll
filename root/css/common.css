@@ -38,8 +38,14 @@ img  {
 .bg-secondary {
 	background-color: var(--bg-secondary) !important;
 }
+.bg-gray {
+	background-color: var(--bg-gray) !important;
+}
 .bg-neutral {
 	background-color: var(--bg-neutral) !important;
+}
+.bg-white {
+	background-color: var(--bg-white) !important;
 }
 .bg-dark-gray {
 	background-color: var(--bg-dark-gray) !important;
@@ -111,6 +117,14 @@ img  {
 	margin-bottom: 18px !important;
 }
 
+.u-prl-30 {
+	padding: 0 30px !important;
+}
+
+.u-mrl-30 {
+	margin: 0 30px !important;
+}
+
 .u-txt-uppercase {
 	text-transform: uppercase;
 }
@@ -178,6 +192,12 @@ img  {
 /* gap */
 .u-gap-0 {
 	gap: 0 !important;
+}
+.u-gap-15 {
+	gap: 15px !important;
+}
+.u-gap-30 {
+	gap: 30px !important;
 }
 
 
@@ -441,6 +461,11 @@ header.reversed {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+	}
+	/* header is centered */
+	.header__area.header__centered {
+		max-width: 900px;
+        margin: 0 auto;
 	}
 	.header__menu__list > li {
 		padding: 8px;
